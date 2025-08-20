@@ -10,6 +10,6 @@ public class Event extends Task {
 
     @Override
     public String toString() {
-        return String.format("[E] %s (from: %s to: %s)", super.toString(), this.from, this.to);
+        return String.format("[%s] %s (from: %s to: %s)", TaskType.EVENT.getSymbol(), super.toString(), this.from, this.to);
     }
 }

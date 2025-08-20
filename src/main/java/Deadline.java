@@ -8,6 +8,6 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
-        return String.format("[D] %s (by: %s)", super.toString(), this.by);
+        return String.format("[%s] %s (by: %s)", TaskType.DEADLINE.getSymbol(), super.toString(), this.by);
     }
 }
