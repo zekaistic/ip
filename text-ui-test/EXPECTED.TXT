@@ -26,38 +26,57 @@ ____________________________________________________________
 
 ____________________________________________________________
 
+Got it. I've added this task:
+  [T] [ ] join sports club
+Now you have 4 tasks in the list.
+____________________________________________________________
+
+____________________________________________________________
+
+Got it. I've added this task:
+  [T] [ ] borrow book
+Now you have 5 tasks in the list.
+____________________________________________________________
+
+____________________________________________________________
+
 Here are the tasks in your list:
 1. [T] [ ] read book
 2. [D] [ ] return book (by: 2024-12-31)
 3. [E] [ ] team meeting (from: 2pm to: 4pm)
+4. [T] [ ] join sports club
+5. [T] [ ] borrow book
 ____________________________________________________________
 
 ____________________________________________________________
 
-Nice! I've marked this task as done:
-  [T] [X] read book
+Noted. I've removed this task:
+  [E] [ ] team meeting (from: 2pm to: 4pm)
+Now you have 4 tasks in the list.
 ____________________________________________________________
 
 ____________________________________________________________
 
 Here are the tasks in your list:
-1. [T] [X] read book
+1. [T] [ ] read book
 2. [D] [ ] return book (by: 2024-12-31)
-3. [E] [ ] team meeting (from: 2pm to: 4pm)
+3. [T] [ ] join sports club
+4. [T] [ ] borrow book
 ____________________________________________________________
 
 ____________________________________________________________
 
-OK, I've marked this task as not done yet:
+Noted. I've removed this task:
   [T] [ ] read book
+Now you have 3 tasks in the list.
 ____________________________________________________________
 
 ____________________________________________________________
 
 Here are the tasks in your list:
-1. [T] [ ] read book
-2. [D] [ ] return book (by: 2024-12-31)
-3. [E] [ ] team meeting (from: 2pm to: 4pm)
+1. [D] [ ] return book (by: 2024-12-31)
+2. [T] [ ] join sports club
+3. [T] [ ] borrow book
 ____________________________________________________________
 
 ____________________________________________________________
@@ -69,9 +88,37 @@ ____________________________________________________________
 ____________________________________________________________
 
 Here are the tasks in your list:
-1. [T] [ ] read book
-2. [D] [X] return book (by: 2024-12-31)
-3. [E] [ ] team meeting (from: 2pm to: 4pm)
+1. [D] [X] return book (by: 2024-12-31)
+2. [T] [ ] join sports club
+3. [T] [ ] borrow book
+____________________________________________________________
+
+____________________________________________________________
+
+OK, I've marked this task as not done yet:
+  [D] [ ] return book (by: 2024-12-31)
+____________________________________________________________
+
+____________________________________________________________
+
+Here are the tasks in your list:
+1. [D] [ ] return book (by: 2024-12-31)
+2. [T] [ ] join sports club
+3. [T] [ ] borrow book
+____________________________________________________________
+
+____________________________________________________________
+
+Nice! I've marked this task as done:
+  [T] [X] join sports club
+____________________________________________________________
+
+____________________________________________________________
+
+Here are the tasks in your list:
+1. [D] [ ] return book (by: 2024-12-31)
+2. [T] [X] join sports club
+3. [T] [ ] borrow book
 ____________________________________________________________
 
 ____________________________________________________________

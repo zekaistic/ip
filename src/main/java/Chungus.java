@@ -1,9 +1,9 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Chungus {
     public static void main(String[] args) {
-        Task[] list = new Task[100];
-        int listIndex = 0;
+        ArrayList<Task> list = new ArrayList<>();
 
         Scanner sc = new Scanner(System.in);
         String message = "____________________________________________________________\n"
@@ -18,41 +18,51 @@ public class Chungus {
                 if (input.equals("list")) {
                     System.out.println("____________________________________________________________\n");
                     System.out.println("Here are the tasks in your list:");
-                    for (int i = 0; i < listIndex; i++) {
-                        System.out.println(String.format("%d. %s", i + 1, list[i].toString()));
+                    for (int i = 0; i < list.size(); i++) {
+                        System.out.println(String.format("%d. %s", i + 1, list.get(i).toString()));
                     }
                     System.out.println("____________________________________________________________\n");
                 } else if (input.startsWith("mark ")) {
                     int idx = parseTaskIndex(input, "mark");
-                    if (idx < 0 || idx >= listIndex) {
-                        throw new ChungusException("Invalid task number. Please enter a number between 1 and " + listIndex);
+                    if (idx < 0 || idx >= list.size()) {
+                        throw new ChungusException("Invalid task number. Please enter a number between 1 and " + list.size());
                     }
-                    list[idx].markAsDone();
+                    list.get(idx).markAsDone();
                     System.out.println("____________________________________________________________\n");
                     System.out.println("Nice! I've marked this task as done:");
-                    System.out.println(String.format("  %s", list[idx].toString()));
+                    System.out.println(String.format("  %s", list.get(idx).toString()));
                     System.out.println("____________________________________________________________\n");
                 } else if (input.startsWith("unmark ")) {
                     int idx = parseTaskIndex(input, "unmark");
-                    if (idx < 0 || idx >= listIndex) {
-                        throw new ChungusException("Invalid task number. Please enter a number between 1 and " + listIndex);
+                    if (idx < 0 || idx >= list.size()) {
+                        throw new ChungusException("Invalid task number. Please enter a number between 1 and " + list.size());
                     }
-                    list[idx].markAsNotDone();
+                    list.get(idx).markAsNotDone();
                     System.out.println("____________________________________________________________\n");
                     System.out.println("OK, I've marked this task as not done yet:");
-                    System.out.println(String.format("  %s", list[idx].toString()));
+                    System.out.println(String.format("  %s", list.get(idx).toString()));
+                    System.out.println("____________________________________________________________\n");
+                } else if (input.startsWith("delete ")) {
+                    int idx = parseTaskIndex(input, "delete");
+                    if (idx < 0 || idx >= list.size()) {
+                        throw new ChungusException("Invalid task number. Please enter a number between 1 and " + list.size());
+                    }
+                    Task deletedTask = list.remove(idx);
+                    System.out.println("____________________________________________________________\n");
+                    System.out.println("Noted. I've removed this task:");
+                    System.out.println(String.format("  %s", deletedTask.toString()));
+                    System.out.println(String.format("Now you have %d tasks in the list.", list.size()));
                     System.out.println("____________________________________________________________\n");
                 } else if (input.startsWith("todo ")) {
                     String description = parseDescription(input, "todo");
                     if (description.trim().isEmpty()) {
                         throw new ChungusException("The description of a todo cannot be empty.");
                     }
-                    list[listIndex] = new Todo(description);
-                    listIndex++;
+                    list.add(new Todo(description));
                     System.out.println("____________________________________________________________\n");
                     System.out.println("Got it. I've added this task:");
-                    System.out.println(String.format("  %s", list[listIndex - 1].toString()));
-                    System.out.println(String.format("Now you have %d tasks in the list.", listIndex));
+                    System.out.println(String.format("  %s", list.get(list.size() - 1).toString()));
+                    System.out.println(String.format("Now you have %d tasks in the list.", list.size()));
                     System.out.println("____________________________________________________________\n");
                 } else if (input.startsWith("deadline ")) {
                     if (!input.contains("/by")) {
@@ -65,12 +75,11 @@ public class Chungus {
                     if (parts[1].trim().isEmpty()) {
                         throw new ChungusException("The due date cannot be empty.");
                     }
-                    list[listIndex] = new Deadline(parts[0], parts[1]);
-                    listIndex++;
+                    list.add(new Deadline(parts[0], parts[1]));
                     System.out.println("____________________________________________________________\n");
                     System.out.println("Got it. I've added this task:");
-                    System.out.println(String.format("  %s", list[listIndex - 1].toString()));
-                    System.out.println(String.format("Now you have %d tasks in the list.", listIndex));
+                    System.out.println(String.format("  %s", list.get(list.size() - 1).toString()));
+                    System.out.println(String.format("Now you have %d tasks in the list.", list.size()));
                     System.out.println("____________________________________________________________\n");
                 } else if (input.startsWith("event ")) {
                     if (!input.contains("/from") || !input.contains("/to")) {
@@ -86,12 +95,11 @@ public class Chungus {
                     if (parts[2].trim().isEmpty()) {
                         throw new ChungusException("The end time cannot be empty.");
                     }
-                    list[listIndex] = new Event(parts[0], parts[1], parts[2]);
-                    listIndex++;
+                    list.add(new Event(parts[0], parts[1], parts[2]));
                     System.out.println("____________________________________________________________\n");
                     System.out.println("Got it. I've added this task:");
-                    System.out.println(String.format("  %s", list[listIndex - 1].toString()));
-                    System.out.println(String.format("Now you have %d tasks in the list.", listIndex));
+                    System.out.println(String.format("  %s", list.get(list.size() - 1).toString()));
+                    System.out.println(String.format("Now you have %d tasks in the list.", list.size()));
                     System.out.println("____________________________________________________________\n");
                 } else if (input.trim().isEmpty()) {
                     // Handle empty input silently
