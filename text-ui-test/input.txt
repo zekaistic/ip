@@ -8,4 +8,10 @@ unmark 1
 list
 mark 2
 list
+todo
+blah
+mark
+mark 99
+deadline /by tomorrow
+event /from 2pm /to 4pm
 bye
