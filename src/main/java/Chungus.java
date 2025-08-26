@@ -1,9 +1,21 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.IOException;
 
 public class Chungus {
     public static void main(String[] args) {
         ArrayList<Task> list = new ArrayList<>();
+
+        try {
+            list = Storage.loadTasks();
+            System.out.println("____________________________________________________________\n");
+            System.out.println("Tasks loaded successfully from storage.");
+            System.out.println("____________________________________________________________\n");
+        } catch (IOException e) {
+            System.out.println("____________________________________________________________\n");
+            System.out.println("Warning: Could not load tasks from storage. Starting with empty list.");
+            System.out.println("____________________________________________________________\n");
+        }
 
         Scanner sc = new Scanner(System.in);
         String message = "____________________________________________________________\n"
@@ -37,10 +49,21 @@ public class Chungus {
             }
             input = sc.nextLine();
         }
+        saveTasksToStorage(list);
         System.out.println("____________________________________________________________\n");
         System.out.println("Bye. Hope to see you again soon!");
         System.out.println("____________________________________________________________\n");
         sc.close();
+    }
+
+    private static void saveTasksToStorage(ArrayList<Task> list) {
+        try {
+            Storage.saveTasks(list);
+        } catch (IOException e) {
+            System.out.println("____________________________________________________________\n");
+            System.out.println("Warning: Could not save tasks to storage: " + e.getMessage());
+            System.out.println("____________________________________________________________\n");
+        }
     }
 
     private static void processCommand(CommandType command, String input, ArrayList<Task> list) throws ChungusException {
