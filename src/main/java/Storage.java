@@ -6,18 +6,20 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Storage {
-    private static final String DATA_DIR = "data";
-    private static final String FILE_NAME = "chungus.txt";
-    private static final String FILE_PATH = DATA_DIR + "/" + FILE_NAME;
+    private final String filePath;
 
-    public static ArrayList<Task> loadTasks() throws IOException {
+    public Storage(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public ArrayList<Task> load() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
         
         // Create data directory if it doesn't exist
         createDataDirectoryIfNeeded();
         
         // Check if file exists, if not return empty list
-        File file = new File(FILE_PATH);
+        File file = new File(filePath);
         if (!file.exists()) {
             return tasks;
         }
@@ -31,17 +33,17 @@ public class Storage {
                 }
             }
         } catch (FileNotFoundException e) {
-            throw new IOException("File not found: " + FILE_PATH, e);
+            throw new IOException("File not found: " + filePath, e);
         }
         
         return tasks;
     }
     
-    public static void saveTasks(ArrayList<Task> tasks) throws IOException {
+    public void save(ArrayList<Task> tasks) throws IOException {
         // Create data directory if it doesn't exist
         createDataDirectoryIfNeeded();
         
-        FileWriter fw = new FileWriter(FILE_PATH);
+        FileWriter fw = new FileWriter(filePath);
         try {
             for (Task task : tasks) {
                 String line = convertTaskToLine(task);
@@ -52,11 +54,12 @@ public class Storage {
         }
     }
     
-    private static void createDataDirectoryIfNeeded() throws IOException {
-        File dataDir = new File(DATA_DIR);
-        if (!dataDir.exists()) {
-            if (!dataDir.mkdir()) {
-                throw new IOException("Could not create directory: " + DATA_DIR);
+    private void createDataDirectoryIfNeeded() throws IOException {
+        File file = new File(filePath);
+        File parent = file.getParentFile();
+        if (parent != null && !parent.exists()) {
+            if (!parent.mkdirs()) {
+                throw new IOException("Could not create directory: " + parent.getPath());
             }
         }
     }
