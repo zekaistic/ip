@@ -1,3 +1,5 @@
+package chungus;
+
 public class Task {
     protected String description;
     protected TaskStatus status;
@@ -31,3 +33,5 @@ public class Task {
         return this.description;
     }
 }
+
+

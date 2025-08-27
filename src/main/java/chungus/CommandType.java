@@ -1,3 +1,5 @@
+package chungus;
+
 public enum CommandType {
     LIST("list"),
     MARK("mark"),
@@ -42,3 +44,5 @@ public enum CommandType {
         return input.startsWith(this.command + " ") || input.equals(this.command);
     }
 }
+
+

@@ -1,3 +1,5 @@
+package chungus;
+
 import java.util.Scanner;
 
 public class Ui {

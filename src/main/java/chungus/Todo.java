@@ -1,3 +1,5 @@
+package chungus;
+
 public class Todo extends Task {
     public Todo(String description) {
         super(description);
@@ -8,3 +10,5 @@ public class Todo extends Task {
         return String.format("[%s] %s", TaskType.TODO.getSymbol(), super.toString());
     }
 }
+
+

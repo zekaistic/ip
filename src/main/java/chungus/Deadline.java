@@ -1,3 +1,5 @@
+package chungus;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -36,3 +38,5 @@ public class Deadline extends Task {
         return String.format("[%s] %s (by: %s)", TaskType.DEADLINE.getSymbol(), super.toString(), formatted);
     }
 }
+
+
