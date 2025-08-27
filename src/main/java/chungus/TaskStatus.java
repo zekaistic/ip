@@ -1,3 +1,5 @@
+package chungus;
+
 public enum TaskStatus {
     DONE("X"),
     NOT_DONE(" ");
@@ -16,3 +18,5 @@ public enum TaskStatus {
         return this == DONE ? NOT_DONE : DONE;
     }
 }
+
+

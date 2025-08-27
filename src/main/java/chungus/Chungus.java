@@ -1,3 +1,5 @@
+package chungus;
+
 import java.io.IOException;
 
 public class Chungus {
@@ -173,3 +175,5 @@ public class Chungus {
         new Chungus("data/chungus.txt").run();
     }
 }
+
+

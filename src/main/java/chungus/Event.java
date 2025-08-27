@@ -1,3 +1,5 @@
+package chungus;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -65,3 +67,5 @@ public class Event extends Task {
         return String.format("[%s] %s (from: %s to: %s)", TaskType.EVENT.getSymbol(), super.toString(), fromDisplay, toDisplay);
     }
 }
+
+

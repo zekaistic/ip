@@ -1,3 +1,5 @@
+package chungus;
+
 public class Parser {
     public CommandType parseCommandType(String input) {
         return CommandType.fromInput(input);

@@ -1,3 +1,5 @@
+package chungus;
+
 public enum TaskType {
     TODO("T"),
     DEADLINE("D"),
@@ -13,3 +15,5 @@ public enum TaskType {
         return symbol;
     }
 }
+
+
