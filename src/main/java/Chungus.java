@@ -1,197 +1,160 @@
-import java.util.Scanner;
-import java.util.ArrayList;
 import java.io.IOException;
 
 public class Chungus {
-    public static void main(String[] args) {
-        ArrayList<Task> list = new ArrayList<>();
+    private final Ui ui;
+    private final Storage storage;
+    private final Parser parser;
+    private TaskList tasks;
 
+    public Chungus(String filePath) {
+        this.ui = new Ui();
+        this.parser = new Parser();
+        this.storage = new Storage(filePath);
         try {
-            list = Storage.loadTasks();
-            System.out.println("____________________________________________________________\n");
-            System.out.println("Tasks loaded successfully from storage.");
-            System.out.println("____________________________________________________________\n");
+            this.tasks = new TaskList(storage.load());
+            ui.showTasksLoaded();
         } catch (IOException e) {
-            System.out.println("____________________________________________________________\n");
-            System.out.println("Warning: Could not load tasks from storage. Starting with empty list.");
-            System.out.println("____________________________________________________________\n");
+            ui.showLoadingError();
+            this.tasks = new TaskList();
         }
+    }
 
-        Scanner sc = new Scanner(System.in);
-        String message = "____________________________________________________________\n"
-                + "Hello! I'm Chungus!\n"
-                + "What can I do for you?\n"
-                + "____________________________________________________________\n";        
-        System.out.println(message);
-
-        String input = sc.nextLine();
+    public void run() {
+        ui.showWelcome();
+        String input = ui.readCommand();
         while (!input.equals(CommandType.BYE.getCommand())) {
             try {
-                CommandType command = CommandType.fromInput(input);
-                
+                CommandType command = parser.parseCommandType(input);
                 if (command == null) {
                     if (input.trim().isEmpty()) {
-                        // Handle empty input silently
+                        // ignore silently
                     } else {
                         throw new ChungusException("I'm sorry, but I don't know what that means :-(");
                     }
                 } else {
-                    processCommand(command, input, list);
+                    processCommand(command, input);
                 }
             } catch (ChungusException e) {
-                System.out.println("____________________________________________________________\n");
-                System.out.println("OOPS!!! " + e.getMessage());
-                System.out.println("____________________________________________________________\n");
+                ui.showError(e.getMessage());
             } catch (Exception e) {
-                System.out.println("____________________________________________________________\n");
-                System.out.println("OOPS!!! Something went wrong: " + e.getMessage());
-                System.out.println("____________________________________________________________\n");
+                ui.showError("Something went wrong: " + e.getMessage());
             }
-            input = sc.nextLine();
+            input = ui.readCommand();
         }
-        saveTasksToStorage(list);
-        System.out.println("____________________________________________________________\n");
-        System.out.println("Bye. Hope to see you again soon!");
-        System.out.println("____________________________________________________________\n");
-        sc.close();
+        saveTasksToStorage();
+        ui.showBye();
+        ui.close();
     }
 
-    private static void saveTasksToStorage(ArrayList<Task> list) {
+    private void saveTasksToStorage() {
         try {
-            Storage.saveTasks(list);
+            storage.save(tasks.asArrayList());
         } catch (IOException e) {
-            System.out.println("____________________________________________________________\n");
-            System.out.println("Warning: Could not save tasks to storage: " + e.getMessage());
-            System.out.println("____________________________________________________________\n");
+            ui.showError("Warning: Could not save tasks to storage: " + e.getMessage());
         }
     }
 
-    private static void processCommand(CommandType command, String input, ArrayList<Task> list) throws ChungusException {
+    private void processCommand(CommandType command, String input) throws ChungusException {
         switch (command) {
             case LIST:
-                displayTaskList(list);
+                ui.showTaskList(tasks);
                 break;
             case MARK:
                 if (!input.startsWith(CommandType.MARK.getCommand() + " ")) {
                     throw new ChungusException("Please provide a task number.");
                 }
-                markTask(input, list, true);
+                markTask(input, true);
                 break;
             case UNMARK:
                 if (!input.startsWith(CommandType.UNMARK.getCommand() + " ")) {
                     throw new ChungusException("Please provide a task number.");
                 }
-                markTask(input, list, false);
+                markTask(input, false);
                 break;
             case DELETE:
                 if (!input.startsWith(CommandType.DELETE.getCommand() + " ")) {
                     throw new ChungusException("Please provide a task number.");
                 }
-                deleteTask(input, list);
+                deleteTask(input);
                 break;
             case TODO:
                 if (!input.startsWith(CommandType.TODO.getCommand() + " ")) {
                     throw new ChungusException("The description of a todo cannot be empty.");
                 }
-                addTodo(input, list);
+                addTodo(input);
                 break;
             case DEADLINE:
                 if (!input.startsWith(CommandType.DEADLINE.getCommand() + " ")) {
                     throw new ChungusException("Deadline command must include '/by' followed by the due date.");
                 }
-                addDeadline(input, list);
+                addDeadline(input);
                 break;
             case EVENT:
                 if (!input.startsWith(CommandType.EVENT.getCommand() + " ")) {
                     throw new ChungusException("Event command must include both '/from' and '/to' followed by start and end times.");
                 }
-                addEvent(input, list);
+                addEvent(input);
                 break;
             default:
                 throw new ChungusException("I'm sorry, but I don't know what that means :-(");
         }
     }
 
-    private static void displayTaskList(ArrayList<Task> list) {
-        System.out.println("____________________________________________________________\n");
-        System.out.println("Here are the tasks in your list:");
-        for (int i = 0; i < list.size(); i++) {
-            System.out.println(String.format("%d. %s", i + 1, list.get(i).toString()));
+    private void markTask(String input, boolean markAsDone) throws ChungusException {
+        int idx = parser.parseTaskIndex(input, markAsDone ? CommandType.MARK.getCommand() : CommandType.UNMARK.getCommand());
+        if (idx < 0 || idx >= tasks.size()) {
+            throw new ChungusException("Invalid task number. Please enter a number between 1 and " + tasks.size());
         }
-        System.out.println("____________________________________________________________\n");
-    }
-
-    private static void markTask(String input, ArrayList<Task> list, boolean markAsDone) throws ChungusException {
-        int idx = parseTaskIndex(input, markAsDone ? CommandType.MARK.getCommand() : CommandType.UNMARK.getCommand());
-        if (idx < 0 || idx >= list.size()) {
-            throw new ChungusException("Invalid task number. Please enter a number between 1 and " + list.size());
-        }
-        
+        Task task = tasks.get(idx);
         if (markAsDone) {
-            list.get(idx).markAsDone();
-            System.out.println("____________________________________________________________\n");
-            System.out.println("Nice! I've marked this task as done:");
-            System.out.println(String.format("  %s", list.get(idx).toString()));
-            System.out.println("____________________________________________________________\n");
+            task.markAsDone();
+            ui.showMarked(task);
         } else {
-            list.get(idx).markAsNotDone();
-            System.out.println("____________________________________________________________\n");
-            System.out.println("OK, I've marked this task as not done yet:");
-            System.out.println(String.format("  %s", list.get(idx).toString()));
-            System.out.println("____________________________________________________________\n");
+            task.markAsNotDone();
+            ui.showUnmarked(task);
         }
     }
 
-    private static void deleteTask(String input, ArrayList<Task> list) throws ChungusException {
-        int idx = parseTaskIndex(input, CommandType.DELETE.getCommand());
-        if (idx < 0 || idx >= list.size()) {
-            throw new ChungusException("Invalid task number. Please enter a number between 1 and " + list.size());
+    private void deleteTask(String input) throws ChungusException {
+        int idx = parser.parseTaskIndex(input, CommandType.DELETE.getCommand());
+        if (idx < 0 || idx >= tasks.size()) {
+            throw new ChungusException("Invalid task number. Please enter a number between 1 and " + tasks.size());
         }
-        Task deletedTask = list.remove(idx);
-        System.out.println("____________________________________________________________\n");
-        System.out.println("Noted. I've removed this task:");
-        System.out.println(String.format("  %s", deletedTask.toString()));
-        System.out.println(String.format("Now you have %d tasks in the list.", list.size()));
-        System.out.println("____________________________________________________________\n");
+        Task deleted = tasks.remove(idx);
+        ui.showTaskDeleted(deleted, tasks.size());
     }
 
-    private static void addTodo(String input, ArrayList<Task> list) throws ChungusException {
-        String description = parseDescription(input, CommandType.TODO.getCommand());
+    private void addTodo(String input) throws ChungusException {
+        String description = parser.parseDescription(input, CommandType.TODO.getCommand());
         if (description.trim().isEmpty()) {
             throw new ChungusException("The description of a todo cannot be empty.");
         }
-        list.add(new Todo(description));
-        System.out.println("____________________________________________________________\n");
-        System.out.println("Got it. I've added this task:");
-        System.out.println(String.format("  %s", list.get(list.size() - 1).toString()));
-        System.out.println(String.format("Now you have %d tasks in the list.", list.size()));
-        System.out.println("____________________________________________________________\n");
+        Task t = new Todo(description);
+        tasks.add(t);
+        ui.showTaskAdded(t, tasks.size());
     }
 
-    private static void addDeadline(String input, ArrayList<Task> list) throws ChungusException {
+    private void addDeadline(String input) throws ChungusException {
         if (!input.contains("/by")) {
             throw new ChungusException("Deadline command must include '/by' followed by the due date.");
         }
-        String[] parts = parseDeadline(input);
+        String[] parts = parser.parseDeadline(input);
         if (parts[0].trim().isEmpty()) {
             throw new ChungusException("The description of a deadline cannot be empty.");
         }
         if (parts[1].trim().isEmpty()) {
             throw new ChungusException("The due date cannot be empty.");
         }
-        list.add(new Deadline(parts[0], parts[1]));
-        System.out.println("____________________________________________________________\n");
-        System.out.println("Got it. I've added this task:");
-        System.out.println(String.format("  %s", list.get(list.size() - 1).toString()));
-        System.out.println(String.format("Now you have %d tasks in the list.", list.size()));
-        System.out.println("____________________________________________________________\n");
+        Task t = new Deadline(parts[0], parts[1]);
+        tasks.add(t);
+        ui.showTaskAdded(t, tasks.size());
     }
 
-    private static void addEvent(String input, ArrayList<Task> list) throws ChungusException {
+    private void addEvent(String input) throws ChungusException {
         if (!input.contains("/from") || !input.contains("/to")) {
             throw new ChungusException("Event command must include both '/from' and '/to' followed by start and end times.");
         }
-        String[] parts = parseEvent(input);
+        String[] parts = parser.parseEvent(input);
         if (parts[0].trim().isEmpty()) {
             throw new ChungusException("The description of an event cannot be empty.");
         }
@@ -201,48 +164,12 @@ public class Chungus {
         if (parts[2].trim().isEmpty()) {
             throw new ChungusException("The end time cannot be empty.");
         }
-        list.add(new Event(parts[0], parts[1], parts[2]));
-        System.out.println("____________________________________________________________\n");
-        System.out.println("Got it. I've added this task:");
-        System.out.println(String.format("  %s", list.get(list.size() - 1).toString()));
-        System.out.println(String.format("Now you have %d tasks in the list.", list.size()));
-        System.out.println("____________________________________________________________\n");
+        Task t = new Event(parts[0], parts[1], parts[2]);
+        tasks.add(t);
+        ui.showTaskAdded(t, tasks.size());
     }
 
-    private static int parseTaskIndex(String input, String command) throws ChungusException {
-        try {
-            String indexStr = input.substring(command.length()).trim();
-            if (indexStr.isEmpty()) {
-                throw new ChungusException("Please provide a task number.");
-            }
-            return Integer.parseInt(indexStr) - 1;
-        } catch (NumberFormatException e) {
-            throw new ChungusException("Please provide a valid number for the task.");
-        }
-    }
-
-    private static String parseDescription(String input, String command) {
-        return input.substring(command.length()).trim();
-    }
-
-    private static String[] parseDeadline(String input) throws ChungusException {
-        try {
-            String description = input.substring(9, input.indexOf("/by")).trim();
-            String by = input.substring(input.indexOf("/by") + 4).trim();
-            return new String[]{description, by};
-        } catch (StringIndexOutOfBoundsException e) {
-            throw new ChungusException("Invalid deadline format. Use: deadline <description> /by <date>");
-        }
-    }
-
-    private static String[] parseEvent(String input) throws ChungusException {
-        try {
-            String description = input.substring(6, input.indexOf("/from")).trim();
-            String from = input.substring(input.indexOf("/from") + 6, input.indexOf("/to")).trim();
-            String to = input.substring(input.indexOf("/to") + 4).trim();
-            return new String[]{description, from, to};
-        } catch (StringIndexOutOfBoundsException e) {
-            throw new ChungusException("Invalid event format. Use: event <description> /from <start> /to <end>");
-        }
+    public static void main(String[] args) {
+        new Chungus("data/chungus.txt").run();
     }
 }
