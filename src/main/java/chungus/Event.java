@@ -23,9 +23,9 @@ public class Event extends Task {
             return null;
         }
         String trimmed = input.trim();
-        DateTimeFormatter[] formatters = new DateTimeFormatter[] {
-            DateTimeFormatter.ofPattern("yyyy-MM-dd"),
-            DateTimeFormatter.ofPattern("d/M/yyyy")
+        DateTimeFormatter[] formatters = new DateTimeFormatter[]{
+                DateTimeFormatter.ofPattern("yyyy-MM-dd"),
+                DateTimeFormatter.ofPattern("d/M/yyyy")
         };
         for (DateTimeFormatter f : formatters) {
             try {
@@ -47,7 +47,7 @@ public class Event extends Task {
     public String getFrom() {
         return this.fromRaw;
     }
-    
+
     public String getTo() {
         return this.toRaw;
     }

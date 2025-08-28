@@ -124,22 +124,22 @@ public class Storage {
             Task task = null;
 
             switch (taskType) {
-                case "T":
-                    task = new Todo(description);
-                    break;
-                case "D":
-                    if (parts.length >= 4) {
-                        String by = parts[3].trim();
-                        task = new Deadline(description, by);
-                    }
-                    break;
-                case "E":
-                    if (parts.length >= 5) {
-                        String from = parts[3].trim();
-                        String to = parts[4].trim();
-                        task = new Event(description, from, to);
-                    }
-                    break;
+            case "T":
+                task = new Todo(description);
+                break;
+            case "D":
+                if (parts.length >= 4) {
+                    String by = parts[3].trim();
+                    task = new Deadline(description, by);
+                }
+                break;
+            case "E":
+                if (parts.length >= 5) {
+                    String from = parts[3].trim();
+                    String to = parts[4].trim();
+                    task = new Event(description, from, to);
+                }
+                break;
             }
 
             if (task != null && isDone) {
@@ -152,5 +152,3 @@ public class Storage {
         }
     }
 }
-
-
