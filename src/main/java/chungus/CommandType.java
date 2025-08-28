@@ -22,21 +22,21 @@ public enum CommandType {
 
     public static CommandType fromInput(String input) {
         String trimmedInput = input.trim();
-        
+
         // Handle exact matches first
         for (CommandType cmd : values()) {
             if (trimmedInput.equals(cmd.command)) {
                 return cmd;
             }
         }
-        
+
         // Handle commands with arguments
         for (CommandType cmd : values()) {
             if (trimmedInput.startsWith(cmd.command + " ")) {
                 return cmd;
             }
         }
-        
+
         return null;
     }
 
