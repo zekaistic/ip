@@ -62,7 +62,8 @@ public class Chungus {
     }
 
     /**
-     * Persists the current task list to storage, showing an error via UI on failure.
+     * Persists the current task list to storage, showing an error via UI on
+     * failure.
      */
     private void saveTasksToStorage() {
         try {
@@ -81,59 +82,6 @@ public class Chungus {
      */
     private void processCommand(CommandType command, String input) throws ChungusException {
         switch (command) {
-<<<<<<< HEAD
-        case LIST:
-            ui.showTaskList(tasks);
-            break;
-        case MARK:
-            if (!input.startsWith(CommandType.MARK.getCommand() + " ")) {
-                throw new ChungusException("Please provide a task number.");
-            }
-            markTask(input, true);
-            break;
-        case UNMARK:
-            if (!input.startsWith(CommandType.UNMARK.getCommand() + " ")) {
-                throw new ChungusException("Please provide a task number.");
-            }
-            markTask(input, false);
-            break;
-        case DELETE:
-            if (!input.startsWith(CommandType.DELETE.getCommand() + " ")) {
-                throw new ChungusException("Please provide a task number.");
-            }
-            deleteTask(input);
-            break;
-        case TODO:
-            if (!input.startsWith(CommandType.TODO.getCommand() + " ")) {
-                throw new ChungusException("The description of a todo cannot be empty.");
-            }
-            addTodo(input);
-            break;
-        case DEADLINE:
-            if (!input.startsWith(CommandType.DEADLINE.getCommand() + " ")) {
-                throw new ChungusException("Deadline command must include '/by' followed by the due date.");
-            }
-            addDeadline(input);
-            break;
-        case EVENT:
-            if (!input.startsWith(CommandType.EVENT.getCommand() + " ")) {
-                throw new ChungusException("Event command must include both '/from' and '/to' followed by start and end times.");
-            }
-            addEvent(input);
-            break;
-        default:
-            throw new ChungusException("I'm sorry, but I don't know what that means :-(");
-        }
-    }
-
-    /**
-     * Marks or unmarks a task based on the provided command input.
-     *
-     * @param input      Raw user input containing the task index.
-     * @param markAsDone True to mark as done; false to mark as not done.
-     * @throws ChungusException if the task index is invalid.
-     */
-=======
             case LIST:
                 ui.showTaskList(tasks);
                 break;
@@ -185,16 +133,13 @@ public class Chungus {
         }
     }
 
-    private void findTasks(String input) throws ChungusException {
-        String keyword = parser.parseDescription(input, CommandType.FIND.getCommand());
-        if (keyword.trim().isEmpty()) {
-            throw new ChungusException("Please provide a keyword to find.");
-        }
-        java.util.ArrayList<Task> matches = tasks.findByKeyword(keyword);
-        ui.showFindResults(matches);
-    }
-
->>>>>>> branch-Level-9
+    /**
+     * Marks or unmarks a task based on the provided command input.
+     *
+     * @param input      Raw user input containing the task index.
+     * @param markAsDone True to mark as done; false to mark as not done.
+     * @throws ChungusException if the task index is invalid.
+     */
     private void markTask(String input, boolean markAsDone) throws ChungusException {
         int idx = parser.parseTaskIndex(input,
                 markAsDone ? CommandType.MARK.getCommand() : CommandType.UNMARK.getCommand());
@@ -209,6 +154,15 @@ public class Chungus {
             task.markAsNotDone();
             ui.showUnmarked(task);
         }
+    }
+
+    private void findTasks(String input) throws ChungusException {
+        String keyword = parser.parseDescription(input, CommandType.FIND.getCommand());
+        if (keyword.trim().isEmpty()) {
+            throw new ChungusException("Please provide a keyword to find.");
+        }
+        java.util.ArrayList<Task> matches = tasks.findByKeyword(keyword);
+        ui.showFindResults(matches);
     }
 
     /**
