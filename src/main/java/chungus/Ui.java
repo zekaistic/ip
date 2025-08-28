@@ -1,5 +1,10 @@
 package chungus;
 
+/**
+ * Console-based user interface for input and output.
+ * Responsible for all user-facing messages and reading commands.
+ */
+
 import java.util.Scanner;
 
 public class Ui {

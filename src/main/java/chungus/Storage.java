@@ -1,5 +1,10 @@
 package chungus;
 
+/**
+ * Handles persistence of tasks to and from a plain-text data file.
+ * Uses a simple line format compatible with earlier versions of the app.
+ */
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -10,10 +15,21 @@ import java.util.Scanner;
 public class Storage {
     private final String filePath;
 
+    /**
+     * Creates a storage instance targeting the given file path.
+     *
+     * @param filePath Path to the data file used for persistence.
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Loads tasks from disk. If the file does not exist, returns an empty list.
+     *
+     * @return Tasks loaded from the backing file.
+     * @throws IOException if reading fails.
+     */
     public ArrayList<Task> load() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
         createDataDirectoryIfNeeded();
@@ -38,6 +54,12 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Writes the provided tasks to disk, replacing previous contents.
+     *
+     * @param tasks Tasks to persist.
+     * @throws IOException if writing fails.
+     */
     public void save(ArrayList<Task> tasks) throws IOException {
         createDataDirectoryIfNeeded();
 
