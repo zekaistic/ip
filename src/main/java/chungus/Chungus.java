@@ -81,6 +81,7 @@ public class Chungus {
      */
     private void processCommand(CommandType command, String input) throws ChungusException {
         switch (command) {
+<<<<<<< HEAD
         case LIST:
             ui.showTaskList(tasks);
             break;
@@ -132,8 +133,71 @@ public class Chungus {
      * @param markAsDone True to mark as done; false to mark as not done.
      * @throws ChungusException if the task index is invalid.
      */
+=======
+            case LIST:
+                ui.showTaskList(tasks);
+                break;
+            case FIND:
+                if (!input.startsWith(CommandType.FIND.getCommand() + " ")) {
+                    throw new ChungusException("Please provide a keyword to find.");
+                }
+                findTasks(input);
+                break;
+            case MARK:
+                if (!input.startsWith(CommandType.MARK.getCommand() + " ")) {
+                    throw new ChungusException("Please provide a task number.");
+                }
+                markTask(input, true);
+                break;
+            case UNMARK:
+                if (!input.startsWith(CommandType.UNMARK.getCommand() + " ")) {
+                    throw new ChungusException("Please provide a task number.");
+                }
+                markTask(input, false);
+                break;
+            case DELETE:
+                if (!input.startsWith(CommandType.DELETE.getCommand() + " ")) {
+                    throw new ChungusException("Please provide a task number.");
+                }
+                deleteTask(input);
+                break;
+            case TODO:
+                if (!input.startsWith(CommandType.TODO.getCommand() + " ")) {
+                    throw new ChungusException("The description of a todo cannot be empty.");
+                }
+                addTodo(input);
+                break;
+            case DEADLINE:
+                if (!input.startsWith(CommandType.DEADLINE.getCommand() + " ")) {
+                    throw new ChungusException("Deadline command must include '/by' followed by the due date.");
+                }
+                addDeadline(input);
+                break;
+            case EVENT:
+                if (!input.startsWith(CommandType.EVENT.getCommand() + " ")) {
+                    throw new ChungusException(
+                            "Event command must include both '/from' and '/to' followed by start and end times.");
+                }
+                addEvent(input);
+                break;
+            default:
+                throw new ChungusException("I'm sorry, but I don't know what that means :-(");
+        }
+    }
+
+    private void findTasks(String input) throws ChungusException {
+        String keyword = parser.parseDescription(input, CommandType.FIND.getCommand());
+        if (keyword.trim().isEmpty()) {
+            throw new ChungusException("Please provide a keyword to find.");
+        }
+        java.util.ArrayList<Task> matches = tasks.findByKeyword(keyword);
+        ui.showFindResults(matches);
+    }
+
+>>>>>>> branch-Level-9
     private void markTask(String input, boolean markAsDone) throws ChungusException {
-        int idx = parser.parseTaskIndex(input, markAsDone ? CommandType.MARK.getCommand() : CommandType.UNMARK.getCommand());
+        int idx = parser.parseTaskIndex(input,
+                markAsDone ? CommandType.MARK.getCommand() : CommandType.UNMARK.getCommand());
         if (idx < 0 || idx >= tasks.size()) {
             throw new ChungusException("Invalid task number. Please enter a number between 1 and " + tasks.size());
         }
@@ -208,7 +272,8 @@ public class Chungus {
      */
     private void addEvent(String input) throws ChungusException {
         if (!input.contains("/from") || !input.contains("/to")) {
-            throw new ChungusException("Event command must include both '/from' and '/to' followed by start and end times.");
+            throw new ChungusException(
+                    "Event command must include both '/from' and '/to' followed by start and end times.");
         }
         String[] parts = parser.parseEvent(input);
         if (parts[0].trim().isEmpty()) {
@@ -234,5 +299,3 @@ public class Chungus {
         new Chungus("data/chungus.txt").run();
     }
 }
-
-

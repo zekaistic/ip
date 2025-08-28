@@ -95,6 +95,13 @@ public class Ui {
         System.out.println(String.format("  %s", task.toString()));
         System.out.println("____________________________________________________________\n");
     }
+
+    public void showFindResults(java.util.ArrayList<Task> matches) {
+        System.out.println("____________________________________________________________\n");
+        System.out.println("Here are the matching tasks in your list:");
+        for (int i = 0; i < matches.size(); i++) {
+            System.out.println(String.format("%d. %s", i + 1, matches.get(i).toString()));
+        }
+        System.out.println("____________________________________________________________\n");
+    }
 }
-
-

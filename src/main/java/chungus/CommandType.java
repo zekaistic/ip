@@ -5,6 +5,7 @@ public enum CommandType {
     MARK("mark"),
     UNMARK("unmark"),
     DELETE("delete"),
+    FIND("find"),
     TODO("todo"),
     DEADLINE("deadline"),
     EVENT("event"),
@@ -44,5 +45,3 @@ public enum CommandType {
         return input.startsWith(this.command + " ") || input.equals(this.command);
     }
 }
-
-
