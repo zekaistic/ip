@@ -1,10 +1,28 @@
 package chungus;
 
+/**
+ * Responsible for parsing raw user input into structured command data.
+ */
+
 public class Parser {
+    /**
+     * Parses the command type from a raw input line.
+     *
+     * @param input Raw user input line.
+     * @return The {@link CommandType} or null if not recognized.
+     */
     public CommandType parseCommandType(String input) {
         return CommandType.fromInput(input);
     }
 
+    /**
+     * Parses a 1-based task index following a command keyword.
+     *
+     * @param input   Raw user input.
+     * @param command Command keyword used as prefix.
+     * @return Zero-based index.
+     * @throws ChungusException if index is missing or invalid.
+     */
     public int parseTaskIndex(String input, String command) throws ChungusException {
         try {
             String indexStr = input.substring(command.length()).trim();
@@ -17,10 +35,24 @@ public class Parser {
         }
     }
 
+    /**
+     * Extracts the description following a command keyword.
+     *
+     * @param input   Raw user input.
+     * @param command Command keyword used as prefix.
+     * @return Trimmed description string (may be empty).
+     */
     public String parseDescription(String input, String command) {
         return input.substring(command.length()).trim();
     }
 
+    /**
+     * Parses a deadline command line into description and due date (/by).
+     *
+     * @param input Raw user input.
+     * @return Array [description, byDate].
+     * @throws ChungusException for malformed input.
+     */
     public String[] parseDeadline(String input) throws ChungusException {
         try {
             String description = input.substring(9, input.indexOf("/by")).trim();
@@ -31,6 +63,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses an event command line into description, from (/from) and to (/to).
+     *
+     * @param input Raw user input.
+     * @return Array [description, from, to].
+     * @throws ChungusException for malformed input.
+     */
     public String[] parseEvent(String input) throws ChungusException {
         try {
             String description = input.substring(6, input.indexOf("/from")).trim();

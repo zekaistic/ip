@@ -1,5 +1,9 @@
 package chungus;
 
+/**
+ * Main application entry point for the Chungus task manager.
+ */
+
 import java.io.IOException;
 
 public class Chungus {
@@ -8,6 +12,11 @@ public class Chungus {
     private final Parser parser;
     private TaskList tasks;
 
+    /**
+     * Creates a new Chungus application instance and loads tasks from storage.
+     *
+     * @param filePath Path to the data file used for persistence.
+     */
     public Chungus(String filePath) {
         this.ui = new Ui();
         this.parser = new Parser();
@@ -21,6 +30,10 @@ public class Chungus {
         }
     }
 
+    /**
+     * Starts the interactive loop: reads user commands, executes them,
+     * and displays results until the user exits.
+     */
     public void run() {
         ui.showWelcome();
         String input = ui.readCommand();
@@ -48,6 +61,9 @@ public class Chungus {
         ui.close();
     }
 
+    /**
+     * Persists the current task list to storage, showing an error via UI on failure.
+     */
     private void saveTasksToStorage() {
         try {
             storage.save(tasks.asArrayList());
@@ -56,6 +72,13 @@ public class Chungus {
         }
     }
 
+    /**
+     * Dispatches a parsed command to the appropriate handler.
+     *
+     * @param command Parsed command type.
+     * @param input   Raw user input.
+     * @throws ChungusException if validation fails or the command is invalid.
+     */
     private void processCommand(CommandType command, String input) throws ChungusException {
         switch (command) {
             case LIST:
@@ -102,6 +125,13 @@ public class Chungus {
         }
     }
 
+    /**
+     * Marks or unmarks a task based on the provided command input.
+     *
+     * @param input      Raw user input containing the task index.
+     * @param markAsDone True to mark as done; false to mark as not done.
+     * @throws ChungusException if the task index is invalid.
+     */
     private void markTask(String input, boolean markAsDone) throws ChungusException {
         int idx = parser.parseTaskIndex(input, markAsDone ? CommandType.MARK.getCommand() : CommandType.UNMARK.getCommand());
         if (idx < 0 || idx >= tasks.size()) {
@@ -117,6 +147,12 @@ public class Chungus {
         }
     }
 
+    /**
+     * Deletes a task at the index specified in the input.
+     *
+     * @param input Raw user input containing the task index.
+     * @throws ChungusException if the task index is invalid.
+     */
     private void deleteTask(String input) throws ChungusException {
         int idx = parser.parseTaskIndex(input, CommandType.DELETE.getCommand());
         if (idx < 0 || idx >= tasks.size()) {
@@ -126,6 +162,12 @@ public class Chungus {
         ui.showTaskDeleted(deleted, tasks.size());
     }
 
+    /**
+     * Adds a Todo task from the provided input.
+     *
+     * @param input Raw user input containing the description.
+     * @throws ChungusException if the description is empty.
+     */
     private void addTodo(String input) throws ChungusException {
         String description = parser.parseDescription(input, CommandType.TODO.getCommand());
         if (description.trim().isEmpty()) {
@@ -136,6 +178,12 @@ public class Chungus {
         ui.showTaskAdded(t, tasks.size());
     }
 
+    /**
+     * Adds a Deadline task from the provided input.
+     *
+     * @param input Raw user input containing description and /by date.
+     * @throws ChungusException if parts are missing.
+     */
     private void addDeadline(String input) throws ChungusException {
         if (!input.contains("/by")) {
             throw new ChungusException("Deadline command must include '/by' followed by the due date.");
@@ -152,6 +200,12 @@ public class Chungus {
         ui.showTaskAdded(t, tasks.size());
     }
 
+    /**
+     * Adds an Event task from the provided input.
+     *
+     * @param input Raw user input containing description, /from and /to.
+     * @throws ChungusException if parts are missing.
+     */
     private void addEvent(String input) throws ChungusException {
         if (!input.contains("/from") || !input.contains("/to")) {
             throw new ChungusException("Event command must include both '/from' and '/to' followed by start and end times.");
@@ -171,6 +225,11 @@ public class Chungus {
         ui.showTaskAdded(t, tasks.size());
     }
 
+    /**
+     * App entry point.
+     *
+     * @param args CLI arguments (unused).
+     */
     public static void main(String[] args) {
         new Chungus("data/chungus.txt").run();
     }
