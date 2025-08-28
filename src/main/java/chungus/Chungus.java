@@ -61,6 +61,12 @@ public class Chungus {
             case LIST:
                 ui.showTaskList(tasks);
                 break;
+            case FIND:
+                if (!input.startsWith(CommandType.FIND.getCommand() + " ")) {
+                    throw new ChungusException("Please provide a keyword to find.");
+                }
+                findTasks(input);
+                break;
             case MARK:
                 if (!input.startsWith(CommandType.MARK.getCommand() + " ")) {
                     throw new ChungusException("Please provide a task number.");
@@ -93,7 +99,8 @@ public class Chungus {
                 break;
             case EVENT:
                 if (!input.startsWith(CommandType.EVENT.getCommand() + " ")) {
-                    throw new ChungusException("Event command must include both '/from' and '/to' followed by start and end times.");
+                    throw new ChungusException(
+                            "Event command must include both '/from' and '/to' followed by start and end times.");
                 }
                 addEvent(input);
                 break;
@@ -102,8 +109,18 @@ public class Chungus {
         }
     }
 
+    private void findTasks(String input) throws ChungusException {
+        String keyword = parser.parseDescription(input, CommandType.FIND.getCommand());
+        if (keyword.trim().isEmpty()) {
+            throw new ChungusException("Please provide a keyword to find.");
+        }
+        java.util.ArrayList<Task> matches = tasks.findByKeyword(keyword);
+        ui.showFindResults(matches);
+    }
+
     private void markTask(String input, boolean markAsDone) throws ChungusException {
-        int idx = parser.parseTaskIndex(input, markAsDone ? CommandType.MARK.getCommand() : CommandType.UNMARK.getCommand());
+        int idx = parser.parseTaskIndex(input,
+                markAsDone ? CommandType.MARK.getCommand() : CommandType.UNMARK.getCommand());
         if (idx < 0 || idx >= tasks.size()) {
             throw new ChungusException("Invalid task number. Please enter a number between 1 and " + tasks.size());
         }
@@ -154,7 +171,8 @@ public class Chungus {
 
     private void addEvent(String input) throws ChungusException {
         if (!input.contains("/from") || !input.contains("/to")) {
-            throw new ChungusException("Event command must include both '/from' and '/to' followed by start and end times.");
+            throw new ChungusException(
+                    "Event command must include both '/from' and '/to' followed by start and end times.");
         }
         String[] parts = parser.parseEvent(input);
         if (parts[0].trim().isEmpty()) {
@@ -175,5 +193,3 @@ public class Chungus {
         new Chungus("data/chungus.txt").run();
     }
 }
-
-

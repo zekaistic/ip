@@ -5,6 +5,7 @@ public enum CommandType {
     MARK("mark"),
     UNMARK("unmark"),
     DELETE("delete"),
+    FIND("find"),
     TODO("todo"),
     DEADLINE("deadline"),
     EVENT("event"),
@@ -22,21 +23,21 @@ public enum CommandType {
 
     public static CommandType fromInput(String input) {
         String trimmedInput = input.trim();
-        
+
         // Handle exact matches first
         for (CommandType cmd : values()) {
             if (trimmedInput.equals(cmd.command)) {
                 return cmd;
             }
         }
-        
+
         // Handle commands with arguments
         for (CommandType cmd : values()) {
             if (trimmedInput.startsWith(cmd.command + " ")) {
                 return cmd;
             }
         }
-        
+
         return null;
     }
 
@@ -44,5 +45,3 @@ public enum CommandType {
         return input.startsWith(this.command + " ") || input.equals(this.command);
     }
 }
-
-
