@@ -58,47 +58,47 @@ public class Chungus {
 
     private void processCommand(CommandType command, String input) throws ChungusException {
         switch (command) {
-            case LIST:
-                ui.showTaskList(tasks);
-                break;
-            case MARK:
-                if (!input.startsWith(CommandType.MARK.getCommand() + " ")) {
-                    throw new ChungusException("Please provide a task number.");
-                }
-                markTask(input, true);
-                break;
-            case UNMARK:
-                if (!input.startsWith(CommandType.UNMARK.getCommand() + " ")) {
-                    throw new ChungusException("Please provide a task number.");
-                }
-                markTask(input, false);
-                break;
-            case DELETE:
-                if (!input.startsWith(CommandType.DELETE.getCommand() + " ")) {
-                    throw new ChungusException("Please provide a task number.");
-                }
-                deleteTask(input);
-                break;
-            case TODO:
-                if (!input.startsWith(CommandType.TODO.getCommand() + " ")) {
-                    throw new ChungusException("The description of a todo cannot be empty.");
-                }
-                addTodo(input);
-                break;
-            case DEADLINE:
-                if (!input.startsWith(CommandType.DEADLINE.getCommand() + " ")) {
-                    throw new ChungusException("Deadline command must include '/by' followed by the due date.");
-                }
-                addDeadline(input);
-                break;
-            case EVENT:
-                if (!input.startsWith(CommandType.EVENT.getCommand() + " ")) {
-                    throw new ChungusException("Event command must include both '/from' and '/to' followed by start and end times.");
-                }
-                addEvent(input);
-                break;
-            default:
-                throw new ChungusException("I'm sorry, but I don't know what that means :-(");
+        case LIST:
+            ui.showTaskList(tasks);
+            break;
+        case MARK:
+            if (!input.startsWith(CommandType.MARK.getCommand() + " ")) {
+                throw new ChungusException("Please provide a task number.");
+            }
+            markTask(input, true);
+            break;
+        case UNMARK:
+            if (!input.startsWith(CommandType.UNMARK.getCommand() + " ")) {
+                throw new ChungusException("Please provide a task number.");
+            }
+            markTask(input, false);
+            break;
+        case DELETE:
+            if (!input.startsWith(CommandType.DELETE.getCommand() + " ")) {
+                throw new ChungusException("Please provide a task number.");
+            }
+            deleteTask(input);
+            break;
+        case TODO:
+            if (!input.startsWith(CommandType.TODO.getCommand() + " ")) {
+                throw new ChungusException("The description of a todo cannot be empty.");
+            }
+            addTodo(input);
+            break;
+        case DEADLINE:
+            if (!input.startsWith(CommandType.DEADLINE.getCommand() + " ")) {
+                throw new ChungusException("Deadline command must include '/by' followed by the due date.");
+            }
+            addDeadline(input);
+            break;
+        case EVENT:
+            if (!input.startsWith(CommandType.EVENT.getCommand() + " ")) {
+                throw new ChungusException("Event command must include both '/from' and '/to' followed by start and end times.");
+            }
+            addEvent(input);
+            break;
+        default:
+            throw new ChungusException("I'm sorry, but I don't know what that means :-(");
         }
     }
 
