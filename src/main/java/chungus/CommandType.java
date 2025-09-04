@@ -1,5 +1,8 @@
 package chungus;
 
+/**
+ * Supported command keywords accepted by the application.
+ */
 public enum CommandType {
     LIST("list"),
     MARK("mark"),
@@ -17,10 +20,21 @@ public enum CommandType {
         this.command = command;
     }
 
+    /**
+     * Returns the raw command string.
+     *
+     * @return command keyword
+     */
     public String getCommand() {
         return command;
     }
 
+    /**
+     * Attempts to infer the command from user input.
+     *
+     * @param input raw input line
+     * @return matching {@link CommandType} or null
+     */
     public static CommandType fromInput(String input) {
         String trimmedInput = input.trim();
 
@@ -41,6 +55,12 @@ public enum CommandType {
         return null;
     }
 
+    /**
+     * Checks if the input matches this command, with or without arguments.
+     *
+     * @param input raw input
+     * @return true if matches
+     */
     public boolean matches(String input) {
         return input.startsWith(this.command + " ") || input.equals(this.command);
     }

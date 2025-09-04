@@ -1,9 +1,9 @@
 package chungus;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
 
 public class ParserTest {
 
@@ -42,5 +42,3 @@ public class ParserTest {
         assertThrows(ChungusException.class, () -> parser.parseEvent("event party /to 2025-01-01"));
     }
 }
-
-

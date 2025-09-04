@@ -45,6 +45,13 @@ public class TaskList {
         return tasks;
     }
 
+    /**
+     * Returns tasks whose description contains the keyword (case-insensitive).
+     * Empty or null keywords return an empty list.
+     *
+     * @param keyword search term
+     * @return matching tasks
+     */
     public ArrayList<Task> findByKeyword(String keyword) {
         ArrayList<Task> matches = new ArrayList<>();
         if (keyword == null || keyword.trim().isEmpty()) {

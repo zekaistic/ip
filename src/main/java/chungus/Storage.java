@@ -1,16 +1,16 @@
 package chungus;
 
-/**
- * Handles persistence of tasks to and from a plain-text data file.
- * Uses a simple line format compatible with earlier versions of the app.
- */
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+/**
+ * Handles persistence of tasks to and from a plain-text data file.
+ * Uses a simple line format compatible with earlier versions of the app.
+ */
 
 public class Storage {
     private final String filePath;
@@ -140,6 +140,9 @@ public class Storage {
                     task = new Event(description, from, to);
                 }
                 break;
+            default:
+                // Unknown task type; ignore line
+                return null;
             }
 
             if (task != null && isDone) {

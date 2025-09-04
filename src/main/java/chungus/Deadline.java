@@ -4,9 +4,18 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Task with a due date.
+ */
 public class Deadline extends Task {
     private LocalDate dueDate;
 
+    /**
+     * Creates a deadline task.
+     *
+     * @param description description text
+     * @param rawDeadline date string in yyyy-MM-dd or d/M/yyyy
+     */
     public Deadline(String description, String rawDeadline) {
         super(description);
         this.dueDate = parseDate(rawDeadline);
@@ -14,7 +23,7 @@ public class Deadline extends Task {
 
     private LocalDate parseDate(String input) {
         String trimmed = input.trim();
-        DateTimeFormatter[] formatters = new DateTimeFormatter[]{
+        DateTimeFormatter[] formatters = new DateTimeFormatter[] {
                 DateTimeFormatter.ofPattern("yyyy-MM-dd"),
                 DateTimeFormatter.ofPattern("d/M/yyyy")
         };
@@ -28,6 +37,11 @@ public class Deadline extends Task {
         return dueDate;
     }
 
+    /**
+     * Returns the due date in ISO-8601 (yyyy-MM-dd) format.
+     *
+     * @return ISO date
+     */
     public String getByIso() {
         return this.dueDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
@@ -38,5 +52,3 @@ public class Deadline extends Task {
         return String.format("[%s] %s (by: %s)", TaskType.DEADLINE.getSymbol(), super.toString(), formatted);
     }
 }
-
-
