@@ -4,12 +4,22 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Task that spans a start and end date/time.
+ */
 public class Event extends Task {
     private String fromRaw;
     private String toRaw;
     private LocalDate fromDate;
     private LocalDate toDate;
 
+    /**
+     * Creates an event.
+     *
+     * @param description description text
+     * @param from        start date (yyyy-MM-dd or d/M/yyyy) or free text
+     * @param to          end date (yyyy-MM-dd or d/M/yyyy) or free text
+     */
     public Event(String description, String from, String to) {
         super(description);
         this.fromRaw = from;
@@ -23,7 +33,7 @@ public class Event extends Task {
             return null;
         }
         String trimmed = input.trim();
-        DateTimeFormatter[] formatters = new DateTimeFormatter[]{
+        DateTimeFormatter[] formatters = new DateTimeFormatter[] {
                 DateTimeFormatter.ofPattern("yyyy-MM-dd"),
                 DateTimeFormatter.ofPattern("d/M/yyyy")
         };
@@ -64,8 +74,11 @@ public class Event extends Task {
     public String toString() {
         String fromDisplay = formatForDisplay(this.fromRaw, this.fromDate);
         String toDisplay = formatForDisplay(this.toRaw, this.toDate);
-        return String.format("[%s] %s (from: %s to: %s)", TaskType.EVENT.getSymbol(), super.toString(), fromDisplay, toDisplay);
+        return String.format(
+                "[%s] %s (from: %s to: %s)",
+                TaskType.EVENT.getSymbol(),
+                super.toString(),
+                fromDisplay,
+                toDisplay);
     }
 }
-
-
