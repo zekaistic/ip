@@ -34,21 +34,28 @@ public class Deadline extends Task {
                 // try next
             }
         }
-        return dueDate;
+        // If no format matches, return null instead of dueDate (which is still null)
+        return null;
     }
 
     /**
-     * Returns the due date in ISO-8601 (yyyy-MM-dd) format.
+     * Returns the due date in yyyy-MM-dd format.
      *
-     * @return ISO date
+     * @return ISO date or null if date parsing failed
      */
     public String getByIso() {
-        return this.dueDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+        return this.dueDate != null ? this.dueDate.format(DateTimeFormatter.ISO_LOCAL_DATE) : null;
     }
 
     @Override
     public String toString() {
-        String formatted = this.dueDate.format(DateTimeFormatter.ofPattern("MMM dd yyyy"));
+        String formatted;
+        if (this.dueDate != null) {
+            formatted = this.dueDate.format(DateTimeFormatter.ofPattern("MMM dd yyyy"));
+        } else {
+            // If date parsing failed, use the raw input
+            formatted = "Invalid date format";
+        }
         return String.format("[%s] %s (by: %s)", TaskType.DEADLINE.getSymbol(), super.toString(), formatted);
     }
 }

@@ -167,4 +167,108 @@ public class Ui {
         }
         System.out.println("____________________________________________________________\n");
     }
+
+    // GUI-compatible methods that return formatted strings instead of printing to console
+
+    /**
+     * Returns the welcome message as a string for GUI display.
+     *
+     * @return Formatted welcome message
+     */
+    public String getWelcomeMessage() {
+        return "Hello! I'm Chungus!\nWhat can I do for you?";
+    }
+
+    /**
+     * Returns the goodbye message as a string for GUI display.
+     *
+     * @return Formatted goodbye message
+     */
+    public String getByeMessage() {
+        return "Bye. Hope to see you again soon!";
+    }
+
+    /**
+     * Returns an error message as a string for GUI display.
+     *
+     * @param message error text to display
+     * @return Formatted error message
+     */
+    public String getErrorMessage(String message) {
+        return "OOPS!!! " + message;
+    }
+
+    /**
+     * Returns the task list as a formatted string for GUI display.
+     *
+     * @param tasks task list to render
+     * @return Formatted task list string
+     */
+    public String getTaskListMessage(TaskList tasks) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Here are the tasks in your list:\n");
+        for (int i = 0; i < tasks.size(); i++) {
+            sb.append(String.format("%d. %s\n", i + 1, tasks.get(i).toString()));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Returns a task added message as a string for GUI display.
+     *
+     * @param task    the task added
+     * @param newSize the new list size
+     * @return Formatted task added message
+     */
+    public String getTaskAddedMessage(Task task, int newSize) {
+        return String.format("Got it. I've added this task:\n  %s\nNow you have %d tasks in the list.",
+                           task.toString(), newSize);
+    }
+
+    /**
+     * Returns a task deleted message as a string for GUI display.
+     *
+     * @param task    the task removed
+     * @param newSize the new list size
+     * @return Formatted task deleted message
+     */
+    public String getTaskDeletedMessage(Task task, int newSize) {
+        return String.format("Noted. I've removed this task:\n  %s\nNow you have %d tasks in the list.",
+                           task.toString(), newSize);
+    }
+
+    /**
+     * Returns a task marked message as a string for GUI display.
+     *
+     * @param task the updated task
+     * @return Formatted task marked message
+     */
+    public String getMarkedMessage(Task task) {
+        return String.format("Nice! I've marked this task as done:\n  %s", task.toString());
+    }
+
+    /**
+     * Returns a task unmarked message as a string for GUI display.
+     *
+     * @param task the updated task
+     * @return Formatted task unmarked message
+     */
+    public String getUnmarkedMessage(Task task) {
+        return String.format("OK, I've marked this task as not done yet:\n  %s", task.toString());
+    }
+
+    /**
+     * Returns the results of a find operation as a string for GUI display.
+     *
+     * @param matches matching tasks
+     * @return Formatted find results message
+     */
+    public String getFindResultsMessage(java.util.ArrayList<Task> matches) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Here are the matching tasks in your list:\n");
+        for (int i = 0; i < matches.size(); i++) {
+            sb.append(String.format("%d. %s\n", i + 1, matches.get(i).toString()));
+        }
+        return sb.toString();
+    }
 }
