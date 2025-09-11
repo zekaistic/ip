@@ -35,7 +35,8 @@ public class Event extends Task {
         String trimmed = input.trim();
         DateTimeFormatter[] formatters = new DateTimeFormatter[] {
                 DateTimeFormatter.ofPattern("yyyy-MM-dd"),
-                DateTimeFormatter.ofPattern("d/M/yyyy")
+                DateTimeFormatter.ofPattern("d/M/yyyy"),
+                DateTimeFormatter.ofPattern("d-M-yyyy")
         };
         for (DateTimeFormatter f : formatters) {
             try {
