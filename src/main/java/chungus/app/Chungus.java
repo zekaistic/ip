@@ -108,27 +108,33 @@ public class Chungus {
             findTasks(input);
             break;
         case MARK:
-            requireStartsWith(input, CommandType.MARK.getCommand() + Constants.SPACE, Constants.MSG_PROVIDE_TASK_NUMBER);
+            requireStartsWith(input, CommandType.MARK.getCommand() + Constants.SPACE,
+                Constants.MSG_PROVIDE_TASK_NUMBER);
             markTask(input, true);
             break;
         case UNMARK:
-            requireStartsWith(input, CommandType.UNMARK.getCommand() + Constants.SPACE, Constants.MSG_PROVIDE_TASK_NUMBER);
+            requireStartsWith(input, CommandType.UNMARK.getCommand() + Constants.SPACE,
+                Constants.MSG_PROVIDE_TASK_NUMBER);
             markTask(input, false);
             break;
         case DELETE:
-            requireStartsWith(input, CommandType.DELETE.getCommand() + Constants.SPACE, Constants.MSG_PROVIDE_TASK_NUMBER);
+            requireStartsWith(input, CommandType.DELETE.getCommand() + Constants.SPACE,
+                Constants.MSG_PROVIDE_TASK_NUMBER);
             deleteTask(input);
             break;
         case TODO:
-            requireStartsWith(input, CommandType.TODO.getCommand() + Constants.SPACE, Constants.MSG_TODO_EMPTY);
+            requireStartsWith(input, CommandType.TODO.getCommand() + Constants.SPACE,
+                Constants.MSG_TODO_EMPTY);
             addTodo(input);
             break;
         case DEADLINE:
-            requireStartsWith(input, CommandType.DEADLINE.getCommand() + Constants.SPACE, Constants.MSG_DEADLINE_NEEDS_BY);
+            requireStartsWith(input, CommandType.DEADLINE.getCommand() + Constants.SPACE,
+                Constants.MSG_DEADLINE_NEEDS_BY);
             addDeadline(input);
             break;
         case EVENT:
-            requireStartsWith(input, CommandType.EVENT.getCommand() + Constants.SPACE, Constants.MSG_EVENT_NEEDS_FROM_TO);
+            requireStartsWith(input, CommandType.EVENT.getCommand() + Constants.SPACE,
+                Constants.MSG_EVENT_NEEDS_FROM_TO);
             addEvent(input);
             break;
         default:
@@ -274,25 +280,32 @@ public class Chungus {
         case LIST:
             return ui.getTaskListMessage(tasks);
         case FIND:
-            requireStartsWith(input, CommandType.FIND.getCommand() + Constants.SPACE, Constants.MSG_PROVIDE_KEYWORD);
+            requireStartsWith(input, CommandType.FIND.getCommand() + Constants.SPACE,
+                Constants.MSG_PROVIDE_KEYWORD);
             return findTasksForGui(input);
         case MARK:
-            requireStartsWith(input, CommandType.MARK.getCommand() + Constants.SPACE, Constants.MSG_PROVIDE_TASK_NUMBER);
+            requireStartsWith(input, CommandType.MARK.getCommand() + Constants.SPACE,
+                Constants.MSG_PROVIDE_TASK_NUMBER);
             return markTaskForGui(input, true);
         case UNMARK:
-            requireStartsWith(input, CommandType.UNMARK.getCommand() + Constants.SPACE, Constants.MSG_PROVIDE_TASK_NUMBER);
+            requireStartsWith(input, CommandType.UNMARK.getCommand() + Constants.SPACE,
+                Constants.MSG_PROVIDE_TASK_NUMBER);
             return markTaskForGui(input, false);
         case DELETE:
-            requireStartsWith(input, CommandType.DELETE.getCommand() + Constants.SPACE, Constants.MSG_PROVIDE_TASK_NUMBER);
+            requireStartsWith(input, CommandType.DELETE.getCommand() + Constants.SPACE,
+                Constants.MSG_PROVIDE_TASK_NUMBER);
             return deleteTaskForGui(input);
         case TODO:
-            requireStartsWith(input, CommandType.TODO.getCommand() + Constants.SPACE, Constants.MSG_TODO_EMPTY);
+            requireStartsWith(input, CommandType.TODO.getCommand() + Constants.SPACE,
+                Constants.MSG_TODO_EMPTY);
             return addTodoForGui(input);
         case DEADLINE:
-            requireStartsWith(input, CommandType.DEADLINE.getCommand() + Constants.SPACE, Constants.MSG_DEADLINE_NEEDS_BY);
+            requireStartsWith(input, CommandType.DEADLINE.getCommand() + Constants.SPACE,
+                Constants.MSG_DEADLINE_NEEDS_BY);
             return addDeadlineForGui(input);
         case EVENT:
-            requireStartsWith(input, CommandType.EVENT.getCommand() + Constants.SPACE, Constants.MSG_EVENT_NEEDS_FROM_TO);
+            requireStartsWith(input, CommandType.EVENT.getCommand() + Constants.SPACE,
+                Constants.MSG_EVENT_NEEDS_FROM_TO);
             return addEventForGui(input);
         default:
             throw new ChungusException(Constants.MSG_UNKNOWN);
