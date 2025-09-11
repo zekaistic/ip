@@ -31,6 +31,7 @@ public class Chungus {
      * @param filePath Path to the data file used for persistence.
      */
     public Chungus(String filePath) {
+        assert filePath != null && !filePath.trim().isEmpty() : "filePath must be non-empty";
         this.ui = new Ui();
         this.parser = new Parser();
         this.storage = new Storage(filePath);
@@ -41,6 +42,10 @@ public class Chungus {
             ui.showLoadingError();
             this.tasks = new TaskList();
         }
+        assert this.ui != null : "Ui must be initialized";
+        assert this.parser != null : "Parser must be initialized";
+        assert this.storage != null : "Storage must be initialized";
+        assert this.tasks != null : "TaskList must be initialized";
     }
 
     /**
@@ -83,6 +88,7 @@ public class Chungus {
         } catch (IOException e) {
             ui.showError("Warning: Could not save tasks to storage: " + e.getMessage());
         }
+        assert tasks != null : "tasks should remain initialized after save";
     }
 
     /**
@@ -143,6 +149,7 @@ public class Chungus {
         if (idx < 0 || idx >= tasks.size()) {
             throw new ChungusException("Invalid task number. Please enter a number between 1 and " + tasks.size());
         }
+        assert idx >= 0 && idx < tasks.size() : "Index out of bounds";
         Task task = tasks.get(idx);
         if (markAsDone) {
             task.markAsDone();
@@ -151,6 +158,7 @@ public class Chungus {
             task.markAsNotDone();
             ui.showUnmarked(task);
         }
+        assert task != null : "Task retrieved should not be null";
     }
 
     private void findTasks(String input) throws ChungusException {
@@ -171,6 +179,7 @@ public class Chungus {
         validateIndex(idx);
         Task deleted = tasks.remove(idx);
         ui.showTaskDeleted(deleted, tasks.size());
+        assert deleted != null : "Deleted task should not be null";
     }
 
     /**
@@ -201,6 +210,7 @@ public class Chungus {
         Task t = new Deadline(parts[0], parts[1]);
         tasks.add(t);
         ui.showTaskAdded(t, tasks.size());
+        assert tasks.size() > 0 : "Tasks size should increase after add";
     }
 
     /**
@@ -219,6 +229,7 @@ public class Chungus {
         Task t = new Event(parts[0], parts[1], parts[2]);
         tasks.add(t);
         ui.showTaskAdded(t, tasks.size());
+        assert tasks.size() > 0 : "Tasks size should increase after add";
     }
 
     /**

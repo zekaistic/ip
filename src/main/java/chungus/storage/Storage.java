@@ -26,6 +26,7 @@ public class Storage {
      * @param filePath Path to the data file used for persistence.
      */
     public Storage(String filePath) {
+        assert filePath != null && !filePath.trim().isEmpty() : "filePath must be non-empty";
         this.filePath = filePath;
     }
 
@@ -36,6 +37,7 @@ public class Storage {
      * @throws IOException if reading fails.
      */
     public ArrayList<Task> load() throws IOException {
+        assert filePath != null && !filePath.trim().isEmpty() : "filePath must be non-empty before load";
         ArrayList<Task> tasks = new ArrayList<>();
         createDataDirectoryIfNeeded();
 
@@ -56,6 +58,7 @@ public class Storage {
             throw new IOException("File not found: " + filePath, e);
         }
 
+        assert tasks != null : "tasks should not be null after load";
         return tasks;
     }
 
@@ -66,11 +69,14 @@ public class Storage {
      * @throws IOException if writing fails.
      */
     public void save(ArrayList<Task> tasks) throws IOException {
+        assert filePath != null && !filePath.trim().isEmpty() : "filePath must be non-empty before save";
+        assert tasks != null : "tasks to save must not be null";
         createDataDirectoryIfNeeded();
 
         FileWriter fw = new FileWriter(filePath);
         try {
             for (Task task : tasks) {
+                assert task != null : "task must not be null when saving";
                 String line = convertTaskToLine(task);
                 fw.write(line + System.lineSeparator());
             }
@@ -90,6 +96,7 @@ public class Storage {
     }
 
     private String convertTaskToLine(Task task) {
+        assert task != null : "task must not be null";
         StringBuilder line = new StringBuilder();
 
         if (task instanceof Todo) {
@@ -102,6 +109,7 @@ public class Storage {
 
         line.append(task.getStatusIcon().equals("X") ? "1" : "0");
         line.append(" | ");
+        assert task.getDescription() != null : "task description must not be null";
         line.append(task.getDescription());
 
         if (task instanceof Deadline) {
@@ -117,6 +125,7 @@ public class Storage {
 
     private Task parseTaskFromLine(String line) {
         try {
+            assert line != null : "line to parse must not be null";
             String[] parts = line.split(" \\| ");
             if (parts.length < 3) {
                 return null;
