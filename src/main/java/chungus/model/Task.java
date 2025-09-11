@@ -6,6 +6,7 @@ package chungus.model;
 public class Task {
     protected String description;
     protected TaskStatus status;
+    protected Priority priority;
 
     /**
      * Creates a task with the given description and NOT_DONE status.
@@ -15,6 +16,7 @@ public class Task {
     public Task(String description) {
         this.description = description;
         this.status = TaskStatus.NOT_DONE;
+        this.priority = Priority.MEDIUM;
     }
 
     /**
@@ -45,7 +47,8 @@ public class Task {
      * Returns a user-friendly representation including status icon.
      */
     public String toString() {
-        return String.format("[%s] %s", getStatusIcon(), this.description);
+        String prio = this.priority != null ? this.priority.getSymbol() : Priority.MEDIUM.getSymbol();
+        return String.format("[%s] [P:%s] %s", getStatusIcon(), prio, this.description);
     }
 
     /**
@@ -55,6 +58,16 @@ public class Task {
      */
     public String getDescription() {
         return this.description;
+    }
+
+    /** Returns the current priority. */
+    public Priority getPriority() {
+        return this.priority;
+    }
+
+    /** Sets the priority, defaulting null to MEDIUM. */
+    public void setPriority(Priority priority) {
+        this.priority = (priority != null) ? priority : Priority.MEDIUM;
     }
 }
 
