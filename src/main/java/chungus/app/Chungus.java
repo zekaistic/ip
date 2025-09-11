@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import chungus.common.ChungusException;
+import chungus.common.Constants;
 import chungus.logic.CommandType;
 import chungus.logic.Parser;
 import chungus.model.Deadline;
@@ -49,18 +50,17 @@ public class Chungus {
     public void run() {
         ui.showWelcome();
         String input = ui.readCommand();
-        while (!input.equals(CommandType.BYE.getCommand())) {
+        while (!isExitCommand(input)) {
+            if (isBlank(input)) {
+                input = ui.readCommand();
+                continue;
+            }
             try {
                 CommandType command = parser.parseCommandType(input);
                 if (command == null) {
-                    if (input.trim().isEmpty()) {
-                        // ignore silently
-                    } else {
-                        throw new ChungusException("I'm sorry, but I don't know what that means :-(");
-                    }
-                } else {
-                    processCommand(command, input);
+                    throw new ChungusException(Constants.MSG_UNKNOWN);
                 }
+                processCommand(command, input);
             } catch (ChungusException e) {
                 ui.showError(e.getMessage());
             } catch (Exception e) {
@@ -98,50 +98,35 @@ public class Chungus {
             ui.showTaskList(tasks);
             break;
         case FIND:
-            if (!input.startsWith(CommandType.FIND.getCommand() + " ")) {
-                throw new ChungusException("Please provide a keyword to find.");
-            }
+            requireStartsWith(input, CommandType.FIND.getCommand() + Constants.SPACE, Constants.MSG_PROVIDE_KEYWORD);
             findTasks(input);
             break;
         case MARK:
-            if (!input.startsWith(CommandType.MARK.getCommand() + " ")) {
-                throw new ChungusException("Please provide a task number.");
-            }
+            requireStartsWith(input, CommandType.MARK.getCommand() + Constants.SPACE, Constants.MSG_PROVIDE_TASK_NUMBER);
             markTask(input, true);
             break;
         case UNMARK:
-            if (!input.startsWith(CommandType.UNMARK.getCommand() + " ")) {
-                throw new ChungusException("Please provide a task number.");
-            }
+            requireStartsWith(input, CommandType.UNMARK.getCommand() + Constants.SPACE, Constants.MSG_PROVIDE_TASK_NUMBER);
             markTask(input, false);
             break;
         case DELETE:
-            if (!input.startsWith(CommandType.DELETE.getCommand() + " ")) {
-                throw new ChungusException("Please provide a task number.");
-            }
+            requireStartsWith(input, CommandType.DELETE.getCommand() + Constants.SPACE, Constants.MSG_PROVIDE_TASK_NUMBER);
             deleteTask(input);
             break;
         case TODO:
-            if (!input.startsWith(CommandType.TODO.getCommand() + " ")) {
-                throw new ChungusException("The description of a todo cannot be empty.");
-            }
+            requireStartsWith(input, CommandType.TODO.getCommand() + Constants.SPACE, Constants.MSG_TODO_EMPTY);
             addTodo(input);
             break;
         case DEADLINE:
-            if (!input.startsWith(CommandType.DEADLINE.getCommand() + " ")) {
-                throw new ChungusException("Deadline command must include '/by' followed by the due date.");
-            }
+            requireStartsWith(input, CommandType.DEADLINE.getCommand() + Constants.SPACE, Constants.MSG_DEADLINE_NEEDS_BY);
             addDeadline(input);
             break;
         case EVENT:
-            if (!input.startsWith(CommandType.EVENT.getCommand() + " ")) {
-                throw new ChungusException(
-                        "Event command must include both '/from' and '/to' followed by start and end times.");
-            }
+            requireStartsWith(input, CommandType.EVENT.getCommand() + Constants.SPACE, Constants.MSG_EVENT_NEEDS_FROM_TO);
             addEvent(input);
             break;
         default:
-            throw new ChungusException("I'm sorry, but I don't know what that means :-(");
+            throw new ChungusException(Constants.MSG_UNKNOWN);
         }
     }
 
@@ -170,9 +155,7 @@ public class Chungus {
 
     private void findTasks(String input) throws ChungusException {
         String keyword = parser.parseDescription(input, CommandType.FIND.getCommand());
-        if (keyword.trim().isEmpty()) {
-            throw new ChungusException("Please provide a keyword to find.");
-        }
+        requireNotBlank(keyword, Constants.MSG_PROVIDE_KEYWORD);
         ArrayList<Task> matches = tasks.findByKeyword(keyword);
         ui.showFindResults(matches);
     }
@@ -185,9 +168,7 @@ public class Chungus {
      */
     private void deleteTask(String input) throws ChungusException {
         int idx = parser.parseTaskIndex(input, CommandType.DELETE.getCommand());
-        if (idx < 0 || idx >= tasks.size()) {
-            throw new ChungusException("Invalid task number. Please enter a number between 1 and " + tasks.size());
-        }
+        validateIndex(idx);
         Task deleted = tasks.remove(idx);
         ui.showTaskDeleted(deleted, tasks.size());
     }
@@ -200,9 +181,7 @@ public class Chungus {
      */
     private void addTodo(String input) throws ChungusException {
         String description = parser.parseDescription(input, CommandType.TODO.getCommand());
-        if (description.trim().isEmpty()) {
-            throw new ChungusException("The description of a todo cannot be empty.");
-        }
+        requireNotBlank(description, Constants.MSG_TODO_EMPTY);
         Task t = new Todo(description);
         tasks.add(t);
         ui.showTaskAdded(t, tasks.size());
@@ -215,16 +194,10 @@ public class Chungus {
      * @throws ChungusException if parts are missing.
      */
     private void addDeadline(String input) throws ChungusException {
-        if (!input.contains("/by")) {
-            throw new ChungusException("Deadline command must include '/by' followed by the due date.");
-        }
+        requireContains(input, Constants.TOKEN_BY, Constants.MSG_DEADLINE_NEEDS_BY);
         String[] parts = parser.parseDeadline(input);
-        if (parts[0].trim().isEmpty()) {
-            throw new ChungusException("The description of a deadline cannot be empty.");
-        }
-        if (parts[1].trim().isEmpty()) {
-            throw new ChungusException("The due date cannot be empty.");
-        }
+        requireNotBlank(parts[0], Constants.MSG_DEADLINE_DESC_EMPTY);
+        requireNotBlank(parts[1], Constants.MSG_DEADLINE_DATE_EMPTY);
         Task t = new Deadline(parts[0], parts[1]);
         tasks.add(t);
         ui.showTaskAdded(t, tasks.size());
@@ -237,20 +210,12 @@ public class Chungus {
      * @throws ChungusException if parts are missing.
      */
     private void addEvent(String input) throws ChungusException {
-        if (!input.contains("/from") || !input.contains("/to")) {
-            throw new ChungusException(
-                    "Event command must include both '/from' and '/to' followed by start and end times.");
-        }
+        requireContains(input, Constants.TOKEN_FROM, Constants.MSG_EVENT_NEEDS_FROM_TO);
+        requireContains(input, Constants.TOKEN_TO, Constants.MSG_EVENT_NEEDS_FROM_TO);
         String[] parts = parser.parseEvent(input);
-        if (parts[0].trim().isEmpty()) {
-            throw new ChungusException("The description of an event cannot be empty.");
-        }
-        if (parts[1].trim().isEmpty()) {
-            throw new ChungusException("The start time cannot be empty.");
-        }
-        if (parts[2].trim().isEmpty()) {
-            throw new ChungusException("The end time cannot be empty.");
-        }
+        requireNotBlank(parts[0], Constants.MSG_EVENT_DESC_EMPTY);
+        requireNotBlank(parts[1], Constants.MSG_EVENT_START_EMPTY);
+        requireNotBlank(parts[2], Constants.MSG_EVENT_END_EMPTY);
         Task t = new Event(parts[0], parts[1], parts[2]);
         tasks.add(t);
         ui.showTaskAdded(t, tasks.size());
@@ -264,21 +229,19 @@ public class Chungus {
      * @return Formatted response string
      */
     public String getResponse(String input) {
-        if (input.trim().equals(CommandType.BYE.getCommand())) {
+        if (isExitCommand(input)) {
             saveTasksToStorage();
             return ui.getByeMessage();
         }
         try {
             CommandType command = parser.parseCommandType(input);
-            if (command == null) {
-                if (input.trim().isEmpty()) {
-                    return "";
-                } else {
-                    throw new ChungusException("I'm sorry, but I don't know what that means :-(");
-                }
-            } else {
-                return processCommandForGui(command, input);
+            if (isBlank(input)) {
+                return "";
             }
+            if (command == null) {
+                throw new ChungusException(Constants.MSG_UNKNOWN);
+            }
+            return processCommandForGui(command, input);
         } catch (ChungusException e) {
             return ui.getErrorMessage(e.getMessage());
         } catch (Exception e) {
@@ -300,43 +263,28 @@ public class Chungus {
         case LIST:
             return ui.getTaskListMessage(tasks);
         case FIND:
-            if (!input.startsWith(CommandType.FIND.getCommand() + " ")) {
-                throw new ChungusException("Please provide a keyword to find.");
-            }
+            requireStartsWith(input, CommandType.FIND.getCommand() + Constants.SPACE, Constants.MSG_PROVIDE_KEYWORD);
             return findTasksForGui(input);
         case MARK:
-            if (!input.startsWith(CommandType.MARK.getCommand() + " ")) {
-                throw new ChungusException("Please provide a task number.");
-            }
+            requireStartsWith(input, CommandType.MARK.getCommand() + Constants.SPACE, Constants.MSG_PROVIDE_TASK_NUMBER);
             return markTaskForGui(input, true);
         case UNMARK:
-            if (!input.startsWith(CommandType.UNMARK.getCommand() + " ")) {
-                throw new ChungusException("Please provide a task number.");
-            }
+            requireStartsWith(input, CommandType.UNMARK.getCommand() + Constants.SPACE, Constants.MSG_PROVIDE_TASK_NUMBER);
             return markTaskForGui(input, false);
         case DELETE:
-            if (!input.startsWith(CommandType.DELETE.getCommand() + " ")) {
-                throw new ChungusException("Please provide a task number.");
-            }
+            requireStartsWith(input, CommandType.DELETE.getCommand() + Constants.SPACE, Constants.MSG_PROVIDE_TASK_NUMBER);
             return deleteTaskForGui(input);
         case TODO:
-            if (!input.startsWith(CommandType.TODO.getCommand() + " ")) {
-                throw new ChungusException("The description of a todo cannot be empty.");
-            }
+            requireStartsWith(input, CommandType.TODO.getCommand() + Constants.SPACE, Constants.MSG_TODO_EMPTY);
             return addTodoForGui(input);
         case DEADLINE:
-            if (!input.startsWith(CommandType.DEADLINE.getCommand() + " ")) {
-                throw new ChungusException("Deadline command must include '/by' followed by the due date.");
-            }
+            requireStartsWith(input, CommandType.DEADLINE.getCommand() + Constants.SPACE, Constants.MSG_DEADLINE_NEEDS_BY);
             return addDeadlineForGui(input);
         case EVENT:
-            if (!input.startsWith(CommandType.EVENT.getCommand() + " ")) {
-                throw new ChungusException(
-                        "Event command must include both '/from' and '/to' followed by start and end times.");
-            }
+            requireStartsWith(input, CommandType.EVENT.getCommand() + Constants.SPACE, Constants.MSG_EVENT_NEEDS_FROM_TO);
             return addEventForGui(input);
         default:
-            throw new ChungusException("I'm sorry, but I don't know what that means :-(");
+            throw new ChungusException(Constants.MSG_UNKNOWN);
         }
     }
 
@@ -366,9 +314,7 @@ public class Chungus {
 
     private String findTasksForGui(String input) throws ChungusException {
         String keyword = parser.parseDescription(input, CommandType.FIND.getCommand());
-        if (keyword.trim().isEmpty()) {
-            throw new ChungusException("Please provide a keyword to find.");
-        }
+        requireNotBlank(keyword, Constants.MSG_PROVIDE_KEYWORD);
         java.util.ArrayList<Task> matches = tasks.findByKeyword(keyword);
         return ui.getFindResultsMessage(matches);
     }
@@ -382,9 +328,7 @@ public class Chungus {
      */
     private String deleteTaskForGui(String input) throws ChungusException {
         int idx = parser.parseTaskIndex(input, CommandType.DELETE.getCommand());
-        if (idx < 0 || idx >= tasks.size()) {
-            throw new ChungusException("Invalid task number. Please enter a number between 1 and " + tasks.size());
-        }
+        validateIndex(idx);
         Task deleted = tasks.remove(idx);
         return ui.getTaskDeletedMessage(deleted, tasks.size());
     }
@@ -398,9 +342,7 @@ public class Chungus {
      */
     private String addTodoForGui(String input) throws ChungusException {
         String description = parser.parseDescription(input, CommandType.TODO.getCommand());
-        if (description.trim().isEmpty()) {
-            throw new ChungusException("The description of a todo cannot be empty.");
-        }
+        requireNotBlank(description, Constants.MSG_TODO_EMPTY);
         Task t = new Todo(description);
         tasks.add(t);
         return ui.getTaskAddedMessage(t, tasks.size());
@@ -414,16 +356,10 @@ public class Chungus {
      * @throws ChungusException if parts are missing.
      */
     private String addDeadlineForGui(String input) throws ChungusException {
-        if (!input.contains("/by")) {
-            throw new ChungusException("Deadline command must include '/by' followed by the due date.");
-        }
+        requireContains(input, Constants.TOKEN_BY, Constants.MSG_DEADLINE_NEEDS_BY);
         String[] parts = parser.parseDeadline(input);
-        if (parts[0].trim().isEmpty()) {
-            throw new ChungusException("The description of a deadline cannot be empty.");
-        }
-        if (parts[1].trim().isEmpty()) {
-            throw new ChungusException("The due date cannot be empty.");
-        }
+        requireNotBlank(parts[0], Constants.MSG_DEADLINE_DESC_EMPTY);
+        requireNotBlank(parts[1], Constants.MSG_DEADLINE_DATE_EMPTY);
         Task t = new Deadline(parts[0], parts[1]);
         tasks.add(t);
         return ui.getTaskAddedMessage(t, tasks.size());
@@ -437,20 +373,12 @@ public class Chungus {
      * @throws ChungusException if parts are missing.
      */
     private String addEventForGui(String input) throws ChungusException {
-        if (!input.contains("/from") || !input.contains("/to")) {
-            throw new ChungusException(
-                    "Event command must include both '/from' and '/to' followed by start and end times.");
-        }
+        requireContains(input, Constants.TOKEN_FROM, Constants.MSG_EVENT_NEEDS_FROM_TO);
+        requireContains(input, Constants.TOKEN_TO, Constants.MSG_EVENT_NEEDS_FROM_TO);
         String[] parts = parser.parseEvent(input);
-        if (parts[0].trim().isEmpty()) {
-            throw new ChungusException("The description of an event cannot be empty.");
-        }
-        if (parts[1].trim().isEmpty()) {
-            throw new ChungusException("The start time cannot be empty.");
-        }
-        if (parts[2].trim().isEmpty()) {
-            throw new ChungusException("The end time cannot be empty.");
-        }
+        requireNotBlank(parts[0], Constants.MSG_EVENT_DESC_EMPTY);
+        requireNotBlank(parts[1], Constants.MSG_EVENT_START_EMPTY);
+        requireNotBlank(parts[2], Constants.MSG_EVENT_END_EMPTY);
         Task t = new Event(parts[0], parts[1], parts[2]);
         tasks.add(t);
         return ui.getTaskAddedMessage(t, tasks.size());
@@ -471,7 +399,36 @@ public class Chungus {
      *
      */
     public static void main(String[] args) {
-        new Chungus("data/chungus.txt").run();
+        new Chungus(Constants.DEFAULT_STORAGE_PATH).run();
+    }
+
+    // Small helpers to follow SLAP and reduce nesting/duplication
+    private static boolean isBlank(String s) {
+        return s == null || s.trim().isEmpty();
+    }
+
+    private static void requireNotBlank(String s, String message) throws ChungusException {
+        if (isBlank(s)) {
+            throw new ChungusException(message);
+        }
+    }
+
+    private static void requireStartsWith(String input, String prefix, String message) throws ChungusException {
+        if (isBlank(input) || !input.startsWith(prefix)) {
+            throw new ChungusException(message);
+        }
+    }
+
+    private static void requireContains(String input, String token, String message) throws ChungusException {
+        if (isBlank(input) || !input.contains(token)) {
+            throw new ChungusException(message);
+        }
+    }
+
+    private void validateIndex(int idx) throws ChungusException {
+        if (idx < 0 || idx >= tasks.size()) {
+            throw new ChungusException("Invalid task number. Please enter a number between 1 and " + tasks.size());
+        }
     }
 }
 
