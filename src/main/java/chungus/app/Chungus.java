@@ -30,6 +30,7 @@ public class Chungus {
      * @param filePath Path to the data file used for persistence.
      */
     public Chungus(String filePath) {
+        assert filePath != null && !filePath.trim().isEmpty() : "filePath must be non-empty";
         this.ui = new Ui();
         this.parser = new Parser();
         this.storage = new Storage(filePath);
@@ -40,6 +41,10 @@ public class Chungus {
             ui.showLoadingError();
             this.tasks = new TaskList();
         }
+        assert this.ui != null : "Ui must be initialized";
+        assert this.parser != null : "Parser must be initialized";
+        assert this.storage != null : "Storage must be initialized";
+        assert this.tasks != null : "TaskList must be initialized";
     }
 
     /**
@@ -83,6 +88,7 @@ public class Chungus {
         } catch (IOException e) {
             ui.showError("Warning: Could not save tasks to storage: " + e.getMessage());
         }
+        assert tasks != null : "tasks should remain initialized after save";
     }
 
     /**
@@ -158,6 +164,7 @@ public class Chungus {
         if (idx < 0 || idx >= tasks.size()) {
             throw new ChungusException("Invalid task number. Please enter a number between 1 and " + tasks.size());
         }
+        assert idx >= 0 && idx < tasks.size() : "Index out of bounds";
         Task task = tasks.get(idx);
         if (markAsDone) {
             task.markAsDone();
@@ -166,6 +173,7 @@ public class Chungus {
             task.markAsNotDone();
             ui.showUnmarked(task);
         }
+        assert task != null : "Task retrieved should not be null";
     }
 
     private void findTasks(String input) throws ChungusException {
@@ -188,8 +196,10 @@ public class Chungus {
         if (idx < 0 || idx >= tasks.size()) {
             throw new ChungusException("Invalid task number. Please enter a number between 1 and " + tasks.size());
         }
+        assert idx >= 0 && idx < tasks.size() : "Index out of bounds for delete";
         Task deleted = tasks.remove(idx);
         ui.showTaskDeleted(deleted, tasks.size());
+        assert deleted != null : "Deleted task should not be null";
     }
 
     /**
@@ -203,6 +213,7 @@ public class Chungus {
         if (description.trim().isEmpty()) {
             throw new ChungusException("The description of a todo cannot be empty.");
         }
+        assert description != null : "Description should not be null";
         Task t = new Todo(description);
         tasks.add(t);
         ui.showTaskAdded(t, tasks.size());
@@ -219,6 +230,7 @@ public class Chungus {
             throw new ChungusException("Deadline command must include '/by' followed by the due date.");
         }
         String[] parts = parser.parseDeadline(input);
+        assert parts != null && parts.length >= 2 : "Deadline parts should contain description and by";
         if (parts[0].trim().isEmpty()) {
             throw new ChungusException("The description of a deadline cannot be empty.");
         }
@@ -228,6 +240,7 @@ public class Chungus {
         Task t = new Deadline(parts[0], parts[1]);
         tasks.add(t);
         ui.showTaskAdded(t, tasks.size());
+        assert tasks.size() > 0 : "Tasks size should increase after add";
     }
 
     /**
@@ -242,6 +255,7 @@ public class Chungus {
                     "Event command must include both '/from' and '/to' followed by start and end times.");
         }
         String[] parts = parser.parseEvent(input);
+        assert parts != null && parts.length >= 3 : "Event parts should contain description, from, to";
         if (parts[0].trim().isEmpty()) {
             throw new ChungusException("The description of an event cannot be empty.");
         }
@@ -254,6 +268,7 @@ public class Chungus {
         Task t = new Event(parts[0], parts[1], parts[2]);
         tasks.add(t);
         ui.showTaskAdded(t, tasks.size());
+        assert tasks.size() > 0 : "Tasks size should increase after add";
     }
 
     /**
@@ -366,6 +381,7 @@ public class Chungus {
 
     private String findTasksForGui(String input) throws ChungusException {
         String keyword = parser.parseDescription(input, CommandType.FIND.getCommand());
+        assert keyword != null : "Keyword should not be null";
         if (keyword.trim().isEmpty()) {
             throw new ChungusException("Please provide a keyword to find.");
         }
@@ -382,6 +398,7 @@ public class Chungus {
      */
     private String deleteTaskForGui(String input) throws ChungusException {
         int idx = parser.parseTaskIndex(input, CommandType.DELETE.getCommand());
+        assert idx >= 0 && idx < tasks.size() : "Index out of bounds for delete";
         if (idx < 0 || idx >= tasks.size()) {
             throw new ChungusException("Invalid task number. Please enter a number between 1 and " + tasks.size());
         }
@@ -397,7 +414,8 @@ public class Chungus {
      * @throws ChungusException if the description is empty.
      */
     private String addTodoForGui(String input) throws ChungusException {
-        String description = parser.parseDescription(input, CommandType.TODO.getCommand());
+        String description = parser.parseDescription(input, CommandType.TODO.getCommand())
+        assert description != null : "Description should not be null";
         if (description.trim().isEmpty()) {
             throw new ChungusException("The description of a todo cannot be empty.");
         }
@@ -418,6 +436,7 @@ public class Chungus {
             throw new ChungusException("Deadline command must include '/by' followed by the due date.");
         }
         String[] parts = parser.parseDeadline(input);
+        assert parts != null && parts.length >= 2 : "Parts should contain description and due date";
         if (parts[0].trim().isEmpty()) {
             throw new ChungusException("The description of a deadline cannot be empty.");
         }
@@ -442,6 +461,7 @@ public class Chungus {
                     "Event command must include both '/from' and '/to' followed by start and end times.");
         }
         String[] parts = parser.parseEvent(input);
+        assert parts != null && parts.length >= 3 : "Event parts should contain description, from, to";
         if (parts[0].trim().isEmpty()) {
             throw new ChungusException("The description of an event cannot be empty.");
         }
