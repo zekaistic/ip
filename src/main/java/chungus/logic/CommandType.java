@@ -1,4 +1,4 @@
-package chungus;
+package chungus.logic;
 
 /**
  * Supported command keywords accepted by the application.
@@ -65,3 +65,5 @@ public enum CommandType {
         return input.startsWith(this.command + " ") || input.equals(this.command);
     }
 }
+
+

@@ -1,4 +1,4 @@
-package chungus;
+package chungus.model;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -41,7 +41,7 @@ public class Deadline extends Task {
     /**
      * Returns the due date in yyyy-MM-dd format.
      *
-     * @return ISO date or null if date parsing failed
+     * @return ISO date or null if date parsing fails
      */
     public String getByIso() {
         return this.dueDate != null ? this.dueDate.format(DateTimeFormatter.ISO_LOCAL_DATE) : null;
@@ -53,9 +53,11 @@ public class Deadline extends Task {
         if (this.dueDate != null) {
             formatted = this.dueDate.format(DateTimeFormatter.ofPattern("MMM dd yyyy"));
         } else {
-            // If date parsing failed, use the raw input
+            // If date parsing fails, use the raw input
             formatted = "Invalid date format";
         }
         return String.format("[%s] %s (by: %s)", TaskType.DEADLINE.getSymbol(), super.toString(), formatted);
     }
 }
+
+

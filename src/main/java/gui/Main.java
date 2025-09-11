@@ -2,7 +2,7 @@ package gui;
 
 import java.io.IOException;
 
-import chungus.Chungus;
+import chungus.app.Chungus;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

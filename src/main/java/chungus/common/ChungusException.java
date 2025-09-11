@@ -1,4 +1,4 @@
-package chungus;
+package chungus.common;
 
 /**
  * Custom exception type used for user-facing validation and parsing errors.
@@ -13,3 +13,5 @@ public class ChungusException extends Exception {
         super(message);
     }
 }
+
+

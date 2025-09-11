@@ -12,6 +12,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import chungus.model.Deadline;
+import chungus.model.Event;
+import chungus.model.Task;
+import chungus.model.Todo;
+import chungus.storage.Storage;
+
 public class StorageTest {
     private Path tempDir;
     private Path tempFile;

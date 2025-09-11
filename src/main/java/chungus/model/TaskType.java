@@ -1,4 +1,4 @@
-package chungus;
+package chungus.model;
 
 /**
  * Types of tasks supported by the application.
@@ -23,3 +23,5 @@ public enum TaskType {
         return symbol;
     }
 }
+
+

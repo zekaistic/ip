@@ -1,4 +1,4 @@
-package chungus;
+package chungus.storage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,6 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import chungus.model.Deadline;
+import chungus.model.Event;
+import chungus.model.Task;
+import chungus.model.Todo;
 
 /**
  * Handles persistence of tasks to and from a plain-text data file.
@@ -155,3 +160,5 @@ public class Storage {
         }
     }
 }
+
+

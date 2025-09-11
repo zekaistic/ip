@@ -1,6 +1,6 @@
 package gui;
 
-import chungus.Chungus;
+import chungus.app.Chungus;
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

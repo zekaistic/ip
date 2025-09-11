@@ -1,6 +1,10 @@
-package chungus;
+package chungus.ui;
 
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import chungus.model.Task;
+import chungus.model.TaskList;
 
 /**
  * Console-based user interface for input and output.
@@ -159,7 +163,7 @@ public class Ui {
      *
      * @param matches matching tasks
      */
-    public void showFindResults(java.util.ArrayList<Task> matches) {
+    public void showFindResults(ArrayList<Task> matches) {
         System.out.println("____________________________________________________________\n");
         System.out.println("Here are the matching tasks in your list:");
         for (int i = 0; i < matches.size(); i++) {
@@ -263,7 +267,7 @@ public class Ui {
      * @param matches matching tasks
      * @return Formatted find results message
      */
-    public String getFindResultsMessage(java.util.ArrayList<Task> matches) {
+    public String getFindResultsMessage(ArrayList<Task> matches) {
         StringBuilder sb = new StringBuilder();
         sb.append("Here are the matching tasks in your list:\n");
         for (int i = 0; i < matches.size(); i++) {
@@ -272,3 +276,5 @@ public class Ui {
         return sb.toString();
     }
 }
+
+

@@ -1,4 +1,4 @@
-package chungus;
+package chungus.model;
 
 /**
  * Base class for all tasks.
@@ -57,3 +57,5 @@ public class Task {
         return this.description;
     }
 }
+
+

@@ -1,6 +1,18 @@
-package chungus;
+package chungus.app;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
+import chungus.common.ChungusException;
+import chungus.logic.CommandType;
+import chungus.logic.Parser;
+import chungus.model.Deadline;
+import chungus.model.Event;
+import chungus.model.Task;
+import chungus.model.TaskList;
+import chungus.model.Todo;
+import chungus.storage.Storage;
+import chungus.ui.Ui;
 
 /**
  * Main application entry point for the Chungus task manager.
@@ -161,7 +173,7 @@ public class Chungus {
         if (keyword.trim().isEmpty()) {
             throw new ChungusException("Please provide a keyword to find.");
         }
-        java.util.ArrayList<Task> matches = tasks.findByKeyword(keyword);
+        ArrayList<Task> matches = tasks.findByKeyword(keyword);
         ui.showFindResults(matches);
     }
 
@@ -260,7 +272,7 @@ public class Chungus {
             CommandType command = parser.parseCommandType(input);
             if (command == null) {
                 if (input.trim().isEmpty()) {
-                    return ""; // ignore silently
+                    return "";
                 } else {
                     throw new ChungusException("I'm sorry, but I don't know what that means :-(");
                 }
@@ -462,3 +474,5 @@ public class Chungus {
         new Chungus("data/chungus.txt").run();
     }
 }
+
+

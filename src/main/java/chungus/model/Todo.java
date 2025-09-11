@@ -1,4 +1,4 @@
-package chungus;
+package chungus.model;
 
 /**
  * Simple task without dates.
@@ -18,3 +18,5 @@ public class Todo extends Task {
         return String.format("[%s] %s", TaskType.TODO.getSymbol(), super.toString());
     }
 }
+
+

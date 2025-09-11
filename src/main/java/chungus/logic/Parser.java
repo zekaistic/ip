@@ -1,4 +1,6 @@
-package chungus;
+package chungus.logic;
+
+import chungus.common.ChungusException;
 
 /**
  * Responsible for parsing raw user input into structured command data.

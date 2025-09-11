@@ -1,4 +1,4 @@
-package chungus;
+package chungus.model;
 
 /**
  * Completion status of a task.
@@ -31,3 +31,5 @@ public enum TaskStatus {
         return this == DONE ? NOT_DONE : DONE;
     }
 }
+
+

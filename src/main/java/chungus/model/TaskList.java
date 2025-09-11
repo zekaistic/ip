@@ -1,4 +1,4 @@
-package chungus;
+package chungus.model;
 
 import java.util.ArrayList;
 
@@ -66,3 +66,5 @@ public class TaskList {
         return matches;
     }
 }
+
+
