@@ -159,6 +159,19 @@ public class Ui {
     }
 
     /**
+     * Shows that a task's priority was updated.
+     *
+     * @param task the updated task
+     * @param index 1-based index
+     */
+    public void showPrioritySet(Task task, int index) {
+        System.out.println("____________________________________________________________\n");
+        System.out.println(String.format("Priority for task %d set:", index));
+        System.out.println(String.format("  %s", task.toString()));
+        System.out.println("____________________________________________________________\n");
+    }
+
+    /**
      * Shows the results of a find operation.
      *
      * @param matches matching tasks
@@ -259,6 +272,17 @@ public class Ui {
      */
     public String getUnmarkedMessage(Task task) {
         return String.format("OK, I've marked this task as not done yet:\n  %s", task.toString());
+    }
+
+    /**
+     * Returns a priority set message for GUI display.
+     *
+     * @param task  the updated task
+     * @param index 1-based index
+     * @return formatted message
+     */
+    public String getPrioritySetMessage(Task task, int index) {
+        return String.format("Priority for task %d set:\n  %s", index, task.toString());
     }
 
     /**

@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import chungus.model.Deadline;
 import chungus.model.Event;
+import chungus.model.Priority;
 import chungus.model.Task;
 import chungus.model.Todo;
 
@@ -120,6 +121,9 @@ public class Storage {
             line.append(" | ").append(event.getFromIso()).append(" | ").append(event.getToIso());
         }
 
+        Priority p = task.getPriority() != null ? task.getPriority() : Priority.MEDIUM;
+        line.append(" | ").append(p.getSymbol());
+
         return line.toString();
     }
 
@@ -161,6 +165,21 @@ public class Storage {
 
             if (task != null && isDone) {
                 task.markAsDone();
+            }
+
+            // Parse optional priority at last position; default MEDIUM if missing
+            try {
+                String lastToken = parts[parts.length - 1].trim();
+                if ("H".equalsIgnoreCase(lastToken) || "M".equalsIgnoreCase(lastToken)
+                        || "L".equalsIgnoreCase(lastToken)) {
+                    task.setPriority(Priority.parseOrDefault(lastToken));
+                } else {
+                    task.setPriority(Priority.MEDIUM);
+                }
+            } catch (Exception ignored) {
+                if (task != null) {
+                    task.setPriority(Priority.MEDIUM);
+                }
             }
 
             return task;

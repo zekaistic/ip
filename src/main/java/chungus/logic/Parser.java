@@ -18,6 +18,35 @@ public class Parser {
     }
 
     /**
+     * Parses a priority command of the form: "priority index level".
+     *
+     * @param input raw user input
+     * @return array [taskIndex, levelString]
+     * @throws ChungusException if invalid
+     */
+    public Object[] parsePriorityCommand(String input) throws ChungusException {
+        String rest = input.substring(CommandType.PRIORITY.getCommand().length()).trim();
+        if (rest.isEmpty()) {
+            throw new ChungusException("Please provide a task number and priority level.");
+        }
+        String[] tokens = rest.split(" ", 2);
+        if (tokens.length < 2) {
+            throw new ChungusException("Please provide a priority level: high, medium, or low.");
+        }
+        int index;
+        try {
+            index = Integer.parseInt(tokens[0]) - 1;
+        } catch (NumberFormatException e) {
+            throw new ChungusException("Please provide a valid number for the task.");
+        }
+        String level = tokens[1].trim();
+        if (level.isEmpty()) {
+            throw new ChungusException("Please provide a priority level: high, medium, or low.");
+        }
+        return new Object[]{index, level};
+    }
+
+    /**
      * Parses a 1-based task index following a command keyword.
      *
      * @param input   Raw user input.

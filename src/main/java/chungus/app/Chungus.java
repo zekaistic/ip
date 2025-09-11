@@ -9,6 +9,7 @@ import chungus.logic.CommandType;
 import chungus.logic.Parser;
 import chungus.model.Deadline;
 import chungus.model.Event;
+import chungus.model.Priority;
 import chungus.model.Task;
 import chungus.model.TaskList;
 import chungus.model.Todo;
@@ -136,6 +137,11 @@ public class Chungus {
             requireStartsWith(input, CommandType.EVENT.getCommand() + Constants.SPACE,
                 Constants.MSG_EVENT_NEEDS_FROM_TO);
             addEvent(input);
+            break;
+        case PRIORITY:
+            requireStartsWith(input, CommandType.PRIORITY.getCommand() + Constants.SPACE,
+                "Please provide a task number and priority level.");
+            setPriority(input);
             break;
         default:
             throw new ChungusException(Constants.MSG_UNKNOWN);
@@ -307,9 +313,35 @@ public class Chungus {
             requireStartsWith(input, CommandType.EVENT.getCommand() + Constants.SPACE,
                 Constants.MSG_EVENT_NEEDS_FROM_TO);
             return addEventForGui(input);
+        case PRIORITY:
+            requireStartsWith(input, CommandType.PRIORITY.getCommand() + Constants.SPACE,
+                "Please provide a task number and priority level.");
+            return setPriorityForGui(input);
         default:
             throw new ChungusException(Constants.MSG_UNKNOWN);
         }
+    }
+
+    private void setPriority(String input) throws ChungusException {
+        Object[] parsed = parser.parsePriorityCommand(input);
+        int idx = (Integer) parsed[0];
+        validateIndex(idx);
+        String level = (String) parsed[1];
+        Priority p = Priority.parseOrDefault(level);
+        Task t = tasks.get(idx);
+        t.setPriority(p);
+        ui.showPrioritySet(t, idx + 1);
+    }
+
+    private String setPriorityForGui(String input) throws ChungusException {
+        Object[] parsed = parser.parsePriorityCommand(input);
+        int idx = (Integer) parsed[0];
+        validateIndex(idx);
+        String level = (String) parsed[1];
+        Priority p = Priority.parseOrDefault(level);
+        Task t = tasks.get(idx);
+        t.setPriority(p);
+        return ui.getPrioritySetMessage(t, idx + 1);
     }
 
     /**
