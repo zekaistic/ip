@@ -70,8 +70,7 @@ public class ParserTest {
         assertEquals("submit assignment /by 2025-12-31", parser.parseDescription(
             "deadline submit assignment /by 2025-12-31", "deadline"));
         assertEquals("project meeting /from 2025-01-01 /to 2025-01-02",
-            parser.parseDescription("event project meeting /from 2025-01-01"
-            + "/to 2025-01-02", "event"));
+            parser.parseDescription("event project meeting /from 2025-01-01 /to 2025-01-02", "event"));
         assertEquals("", parser.parseDescription("todo", "todo"));
         assertEquals("", parser.parseDescription("todo   ", "todo")); // trim() removes trailing spaces
     }
