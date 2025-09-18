@@ -1,7 +1,6 @@
 package chungus.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -134,13 +133,13 @@ public class EventTest {
         assertEquals("Test event", event.getDescription());
         assertEquals(" ", event.getStatusIcon());
         assertEquals(Priority.MEDIUM, event.getPriority());
-        
+
         event.markAsDone();
         assertEquals("X", event.getStatusIcon());
-        
+
         event.toggleStatus();
         assertEquals(" ", event.getStatusIcon());
-        
+
         event.setPriority(Priority.HIGH);
         assertEquals(Priority.HIGH, event.getPriority());
     }
@@ -149,18 +148,18 @@ public class EventTest {
     public void dateParsing_variousFormats_worksCorrectly() {
         // Test different date formats
         String[][] testDatePairs = {
-            {"2025-01-01", "2025-01-02"},    // ISO format
-            {"1/1/2025", "2/1/2025"},        // Slash format
-            {"1-1-2025", "2-1-2025"},        // Dash format
-            {"31/12/2025", "1/1/2026"},      // Slash format with 2-digit day
-            {"31-12-2025", "1-1-2026"}       // Dash format with 2-digit day
+            {"2025-01-01", "2025-01-02"}, // ISO format
+            {"1/1/2025", "2/1/2025"}, // Slash format
+            {"1-1-2025", "2-1-2025"}, // Dash format
+            {"31/12/2025", "1/1/2026"}, // Slash format with 2-digit day
+            {"31-12-2025", "1-1-2026"} // Dash format with 2-digit day
         };
-        
+
         for (String[] dates : testDatePairs) {
             Event testEvent = new Event("Test", dates[0], dates[1]);
-            assertTrue(testEvent.getFromIso() != null, 
+            assertTrue(testEvent.getFromIso() != null,
                 "From date format should be parsed: " + dates[0]);
-            assertTrue(testEvent.getToIso() != null, 
+            assertTrue(testEvent.getToIso() != null,
                 "To date format should be parsed: " + dates[1]);
         }
     }
@@ -169,16 +168,16 @@ public class EventTest {
     public void dateParsing_invalidFormats_returnsRawInput() {
         String[] invalidDates = {
             "not a date",
-            "2025/13/01",    // Invalid month
-            "2025/01/32",    // Invalid day
-            "25-12-31",      // Invalid year format
-            "2025-13-01",    // Invalid month
-            "2025-01-32"     // Invalid day
+            "2025/13/01", // Invalid month
+            "2025/01/32", // Invalid day
+            "25-12-31", // Invalid year format
+            "2025-13-01", // Invalid month
+            "2025-01-32" // Invalid day
         };
-        
+
         for (String date : invalidDates) {
             Event testEvent = new Event("Test", date, "2025-01-01");
-            assertEquals(date, testEvent.getFromIso(), 
+            assertEquals(date, testEvent.getFromIso(),
                 "Invalid from date should return raw input: " + date);
         }
     }
@@ -189,7 +188,7 @@ public class EventTest {
         Event mixedEvent = new Event("Mixed", "2025-01-01", "invalid date");
         assertEquals("2025-01-01", mixedEvent.getFromIso());
         assertEquals("invalid date", mixedEvent.getToIso());
-        
+
         // Both invalid
         Event bothInvalidEvent = new Event("Both invalid", "not a date", "also not a date");
         assertEquals("not a date", bothInvalidEvent.getFromIso());

@@ -8,16 +8,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import chungus.common.Constants;
-import chungus.model.Task;
-import chungus.model.TaskList;
-import chungus.model.Todo;
 
 public class ChungusTest {
     private Chungus chungus;
@@ -63,7 +57,7 @@ public class ChungusTest {
         String response = chungus.getResponse("todo read book");
         assertTrue(response.contains("Got it. I've added this task:"));
         assertTrue(response.contains("read book"));
-        
+
         // Verify task was added by listing
         String listResponse = chungus.getResponse("list");
         assertTrue(listResponse.contains("read book"));
@@ -90,7 +84,7 @@ public class ChungusTest {
     public void getResponse_withListCommand_showsTasks() {
         // Add a task first
         chungus.getResponse("todo read book");
-        
+
         String response = chungus.getResponse("list");
         assertTrue(response.contains("Here are the tasks in your list:"));
         assertTrue(response.contains("read book"));
@@ -106,7 +100,7 @@ public class ChungusTest {
     public void getResponse_withMarkCommand_marksTask() {
         // Add a task first
         chungus.getResponse("todo read book");
-        
+
         String response = chungus.getResponse("mark 1");
         assertTrue(response.contains("Nice! I've marked this task as done:"));
         assertTrue(response.contains("read book"));
@@ -117,7 +111,7 @@ public class ChungusTest {
         // Add and mark a task first
         chungus.getResponse("todo read book");
         chungus.getResponse("mark 1");
-        
+
         String response = chungus.getResponse("unmark 1");
         assertTrue(response.contains("OK, I've marked this task as not done yet:"));
         assertTrue(response.contains("read book"));
@@ -127,11 +121,11 @@ public class ChungusTest {
     public void getResponse_withDeleteCommand_deletesTask() {
         // Add a task first
         chungus.getResponse("todo read book");
-        
+
         String response = chungus.getResponse("delete 1");
         assertTrue(response.contains("Noted. I've removed this task:"));
         assertTrue(response.contains("read book"));
-        
+
         // Verify task was deleted
         String listResponse = chungus.getResponse("list");
         assertTrue(listResponse.contains("Here are the tasks in your list:"));
@@ -143,7 +137,7 @@ public class ChungusTest {
         chungus.getResponse("todo read book");
         chungus.getResponse("todo write book report");
         chungus.getResponse("todo clean room");
-        
+
         String response = chungus.getResponse("find book");
         assertTrue(response.contains("Here are the matching tasks in your list:"));
         assertTrue(response.contains("read book"));
@@ -154,7 +148,7 @@ public class ChungusTest {
     public void getResponse_withPriorityCommand_setsPriority() {
         // Add a task first
         chungus.getResponse("todo read book");
-        
+
         String response = chungus.getResponse("priority 1 high");
         assertTrue(response.contains("Priority for task 1 set:"));
         assertTrue(response.contains("read book"));
@@ -182,10 +176,10 @@ public class ChungusTest {
     @Test
     public void getResponse_withInvalidTaskIndex_returnsErrorMessage() {
         chungus.getResponse("todo read book");
-        
+
         String response = chungus.getResponse("mark 2");
         assertTrue(response.contains("Invalid task number"));
-        
+
         response = chungus.getResponse("delete 0");
         assertTrue(response.contains("Invalid task number"));
     }
@@ -221,7 +215,7 @@ public class ChungusTest {
     @Test
     public void getResponse_withEmptyPriority_returnsErrorMessage() {
         chungus.getResponse("todo read book");
-        
+
         String response = chungus.getResponse("priority 1");
         assertTrue(response.contains("OOPS!!!"));
         assertTrue(response.contains("Please provide a priority level"));
@@ -237,10 +231,10 @@ public class ChungusTest {
     public void getResponse_preservesTaskStateBetweenCalls() {
         // Add a task
         chungus.getResponse("todo read book");
-        
+
         // Mark it as done
         chungus.getResponse("mark 1");
-        
+
         // Verify it's still marked as done
         String listResponse = chungus.getResponse("list");
         assertTrue(listResponse.contains("[X]")); // Done status
@@ -253,13 +247,13 @@ public class ChungusTest {
         chungus.getResponse("todo read book");
         chungus.getResponse("todo write report");
         chungus.getResponse("deadline submit assignment /by 2025-12-31");
-        
+
         // Mark one as done
         chungus.getResponse("mark 1");
-        
+
         // Delete another
         chungus.getResponse("delete 2");
-        
+
         // Verify final state
         String listResponse = chungus.getResponse("list");
         assertTrue(listResponse.contains("read book"));

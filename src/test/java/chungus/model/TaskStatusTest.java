@@ -25,19 +25,19 @@ public class TaskStatusTest {
     @Test
     public void toggle_multipleTimes_alternatesCorrectly() {
         TaskStatus status = TaskStatus.NOT_DONE;
-        
+
         // First toggle: NOT_DONE -> DONE
         status = status.toggle();
         assertEquals(TaskStatus.DONE, status);
-        
+
         // Second toggle: DONE -> NOT_DONE
         status = status.toggle();
         assertEquals(TaskStatus.NOT_DONE, status);
-        
+
         // Third toggle: NOT_DONE -> DONE
         status = status.toggle();
         assertEquals(TaskStatus.DONE, status);
-        
+
         // Fourth toggle: DONE -> NOT_DONE
         status = status.toggle();
         assertEquals(TaskStatus.NOT_DONE, status);
@@ -47,7 +47,7 @@ public class TaskStatusTest {
     public void toggle_doesNotModifyOriginal() {
         TaskStatus original = TaskStatus.DONE;
         TaskStatus toggled = original.toggle();
-        
+
         // Original should remain unchanged
         assertEquals(TaskStatus.DONE, original);
         // Toggled should be different
@@ -60,7 +60,7 @@ public class TaskStatusTest {
         TaskStatus original = TaskStatus.DONE;
         TaskStatus toggled = original.toggle().toggle();
         assertEquals(original, toggled);
-        
+
         original = TaskStatus.NOT_DONE;
         toggled = original.toggle().toggle();
         assertEquals(original, toggled);

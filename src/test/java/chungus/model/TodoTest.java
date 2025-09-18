@@ -66,13 +66,13 @@ public class TodoTest {
         assertEquals("Test todo task", todo.getDescription());
         assertEquals(" ", todo.getStatusIcon());
         assertEquals(Priority.MEDIUM, todo.getPriority());
-        
+
         todo.markAsDone();
         assertEquals("X", todo.getStatusIcon());
-        
+
         todo.toggleStatus();
         assertEquals(" ", todo.getStatusIcon());
-        
+
         todo.setPriority(Priority.LOW);
         assertEquals(Priority.LOW, todo.getPriority());
     }

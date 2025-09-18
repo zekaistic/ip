@@ -107,9 +107,9 @@ public class PriorityTest {
     @Test
     public void parseOrDefault_withPartialMatches_returnsMedium() {
         // Test partial matches that should not match
-        assertEquals(Priority.MEDIUM, Priority.parseOrDefault("hi"));  // partial "high"
-        assertEquals(Priority.MEDIUM, Priority.parseOrDefault("lo"));  // partial "low"
+        assertEquals(Priority.MEDIUM, Priority.parseOrDefault("hi")); // partial "high"
+        assertEquals(Priority.MEDIUM, Priority.parseOrDefault("lo")); // partial "low"
         assertEquals(Priority.MEDIUM, Priority.parseOrDefault("med")); // should match
-        assertEquals(Priority.MEDIUM, Priority.parseOrDefault("me"));  // partial "medium"
+        assertEquals(Priority.MEDIUM, Priority.parseOrDefault("me")); // partial "medium"
     }
 }

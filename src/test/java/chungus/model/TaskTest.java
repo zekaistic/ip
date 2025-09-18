@@ -1,8 +1,6 @@
 package chungus.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,11 +37,11 @@ public class TaskTest {
     public void toggleStatus_togglesBetweenDoneAndNotDone() {
         // Initially NOT_DONE
         assertEquals(" ", task.getStatusIcon());
-        
+
         // Toggle to DONE
         task.toggleStatus();
         assertEquals("X", task.getStatusIcon());
-        
+
         // Toggle back to NOT_DONE
         task.toggleStatus();
         assertEquals(" ", task.getStatusIcon());
@@ -53,7 +51,7 @@ public class TaskTest {
     public void setPriority_withValidPriority_setsCorrectly() {
         task.setPriority(Priority.HIGH);
         assertEquals(Priority.HIGH, task.getPriority());
-        
+
         task.setPriority(Priority.LOW);
         assertEquals(Priority.LOW, task.getPriority());
     }
@@ -68,7 +66,7 @@ public class TaskTest {
     public void toString_includesStatusIconAndPriority() {
         String result = task.toString();
         assertEquals("[ ] [P:M] Test task", result);
-        
+
         task.markAsDone();
         task.setPriority(Priority.HIGH);
         result = task.toString();
@@ -83,7 +81,7 @@ public class TaskTest {
     @Test
     public void getPriority_returnsCurrentPriority() {
         assertEquals(Priority.MEDIUM, task.getPriority());
-        
+
         task.setPriority(Priority.LOW);
         assertEquals(Priority.LOW, task.getPriority());
     }
@@ -91,7 +89,7 @@ public class TaskTest {
     @Test
     public void getStatusIcon_returnsCorrectIcon() {
         assertEquals(" ", task.getStatusIcon());
-        
+
         task.markAsDone();
         assertEquals("X", task.getStatusIcon());
     }

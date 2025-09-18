@@ -41,7 +41,7 @@ public class TaskListTest {
         ArrayList<Task> tasks = new ArrayList<>();
         tasks.add(todo1);
         tasks.add(todo2);
-        
+
         TaskList list = new TaskList(tasks);
         assertEquals(2, list.size());
         assertEquals(todo1, list.get(0));
@@ -60,7 +60,7 @@ public class TaskListTest {
         taskList.add(todo1);
         taskList.add(todo2);
         taskList.add(deadline1);
-        
+
         assertEquals(3, taskList.size());
         assertEquals(todo1, taskList.get(0));
         assertEquals(todo2, taskList.get(1));
@@ -71,7 +71,7 @@ public class TaskListTest {
     public void get_validIndex_returnsCorrectTask() {
         taskList.add(todo1);
         taskList.add(todo2);
-        
+
         assertEquals(todo1, taskList.get(0));
         assertEquals(todo2, taskList.get(1));
     }
@@ -79,7 +79,7 @@ public class TaskListTest {
     @Test
     public void get_invalidIndex_throwsException() {
         taskList.add(todo1);
-        
+
         assertThrows(IndexOutOfBoundsException.class, () -> taskList.get(-1));
         assertThrows(IndexOutOfBoundsException.class, () -> taskList.get(1));
     }
@@ -88,7 +88,7 @@ public class TaskListTest {
     public void remove_validIndex_removesAndReturnsTask() {
         taskList.add(todo1);
         taskList.add(todo2);
-        
+
         Task removed = taskList.remove(0);
         assertEquals(todo1, removed);
         assertEquals(1, taskList.size());
@@ -98,7 +98,7 @@ public class TaskListTest {
     @Test
     public void remove_invalidIndex_throwsException() {
         taskList.add(todo1);
-        
+
         assertThrows(IndexOutOfBoundsException.class, () -> taskList.remove(-1));
         assertThrows(IndexOutOfBoundsException.class, () -> taskList.remove(1));
     }
@@ -106,10 +106,10 @@ public class TaskListTest {
     @Test
     public void size_returnsCorrectSize() {
         assertEquals(0, taskList.size());
-        
+
         taskList.add(todo1);
         assertEquals(1, taskList.size());
-        
+
         taskList.add(todo2);
         assertEquals(2, taskList.size());
     }
@@ -119,7 +119,7 @@ public class TaskListTest {
         ArrayList<Task> tasks = taskList.asArrayList();
         assertNotNull(tasks);
         assertEquals(0, tasks.size());
-        
+
         taskList.add(todo1);
         assertEquals(1, tasks.size());
         assertEquals(todo1, tasks.get(0));
@@ -130,11 +130,11 @@ public class TaskListTest {
         taskList.add(todo1);
         taskList.add(todo2);
         taskList.add(deadline1);
-        
+
         ArrayList<Task> matches = taskList.findByKeyword("book");
         assertEquals(1, matches.size());
         assertEquals(todo1, matches.get(0));
-        
+
         matches = taskList.findByKeyword("report");
         assertEquals(1, matches.size());
         assertEquals(todo2, matches.get(0));
@@ -144,11 +144,11 @@ public class TaskListTest {
     public void findByKeyword_caseInsensitive_returnsMatchingTasks() {
         taskList.add(todo1);
         taskList.add(todo2);
-        
+
         ArrayList<Task> matches = taskList.findByKeyword("BOOK");
         assertEquals(1, matches.size());
         assertEquals(todo1, matches.get(0));
-        
+
         matches = taskList.findByKeyword("Report");
         assertEquals(1, matches.size());
         assertEquals(todo2, matches.get(0));
@@ -158,7 +158,7 @@ public class TaskListTest {
     public void findByKeyword_partialMatch_returnsMatchingTasks() {
         taskList.add(todo1);
         taskList.add(todo2);
-        
+
         ArrayList<Task> matches = taskList.findByKeyword("ea");
         assertEquals(1, matches.size());
         assertEquals(todo1, matches.get(0));
@@ -168,7 +168,7 @@ public class TaskListTest {
     public void findByKeyword_noMatches_returnsEmptyList() {
         taskList.add(todo1);
         taskList.add(todo2);
-        
+
         ArrayList<Task> matches = taskList.findByKeyword("nonexistent");
         assertTrue(matches.isEmpty());
     }
@@ -176,7 +176,7 @@ public class TaskListTest {
     @Test
     public void findByKeyword_nullKeyword_returnsEmptyList() {
         taskList.add(todo1);
-        
+
         ArrayList<Task> matches = taskList.findByKeyword(null);
         assertTrue(matches.isEmpty());
     }
@@ -184,10 +184,10 @@ public class TaskListTest {
     @Test
     public void findByKeyword_emptyKeyword_returnsEmptyList() {
         taskList.add(todo1);
-        
+
         ArrayList<Task> matches = taskList.findByKeyword("");
         assertTrue(matches.isEmpty());
-        
+
         matches = taskList.findByKeyword("   ");
         assertTrue(matches.isEmpty());
     }
@@ -197,11 +197,11 @@ public class TaskListTest {
         Task task1 = new Todo("Read book about Java");
         Task task2 = new Todo("Write book report");
         Task task3 = new Todo("Clean room");
-        
+
         taskList.add(task1);
         taskList.add(task2);
         taskList.add(task3);
-        
+
         ArrayList<Task> matches = taskList.findByKeyword("book");
         assertEquals(2, matches.size());
         assertTrue(matches.contains(task1));

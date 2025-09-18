@@ -67,8 +67,11 @@ public class ParserTest {
     @Test
     public void parseDescription_validInputs_returnsCorrectDescription() {
         assertEquals("read book", parser.parseDescription("todo read book", "todo"));
-        assertEquals("submit assignment /by 2025-12-31", parser.parseDescription("deadline submit assignment /by 2025-12-31", "deadline"));
-        assertEquals("project meeting /from 2025-01-01 /to 2025-01-02", parser.parseDescription("event project meeting /from 2025-01-01 /to 2025-01-02", "event"));
+        assertEquals("submit assignment /by 2025-12-31", parser.parseDescription(
+            "deadline submit assignment /by 2025-12-31", "deadline"));
+        assertEquals("project meeting /from 2025-01-01 /to 2025-01-02",
+            parser.parseDescription("event project meeting /from 2025-01-01"
+            + "/to 2025-01-02", "event"));
         assertEquals("", parser.parseDescription("todo", "todo"));
         assertEquals("", parser.parseDescription("todo   ", "todo")); // trim() removes trailing spaces
     }
@@ -76,7 +79,8 @@ public class ParserTest {
     @Test
     public void parseDescription_withWhitespace_trimsCorrectly() {
         assertEquals("read book", parser.parseDescription("todo  read book  ", "todo"));
-        assertEquals("submit assignment  /by 2025-12-31", parser.parseDescription("deadline  submit assignment  /by 2025-12-31", "deadline"));
+        assertEquals("submit assignment  /by 2025-12-31", parser.parseDescription(
+            "deadline  submit assignment  /by 2025-12-31", "deadline"));
     }
 
     @Test
@@ -99,8 +103,10 @@ public class ParserTest {
         assertThrows(ChungusException.class, () -> parser.parseTaskIndex("mark", "mark"));
         assertThrows(ChungusException.class, () -> parser.parseTaskIndex("mark ", "mark"));
         assertThrows(ChungusException.class, () -> parser.parseTaskIndex("mark abc", "mark"));
-        assertThrows(ChungusException.class, () -> parser.parseTaskIndex("mark 1.5", "mark"));
-        // Note: mark -1 and mark 0 are valid input but convert to invalid indices, which should be handled by the caller
+        assertThrows(ChungusException.class, () -> parser.parseTaskIndex(
+            "mark 1.5", "mark"));
+        // Note: mark -1 and mark 0 are valid input but convert to invalid indices,
+        // which should be handled by the caller
     }
 
     @Test
@@ -131,9 +137,10 @@ public class ParserTest {
     @Test
     public void parseDeadline_malformedInput_throws() {
         // Only some malformed inputs throw exceptions
-        assertThrows(ChungusException.class, () -> parser.parseDeadline("deadline task /by"));
+        assertThrows(ChungusException.class, () -> parser.parseDeadline(
+            "deadline task /by"));
     }
-    
+
     @Test
     public void parseDeadline_malformedInput_returnsEmptyDescription() throws Exception {
         // Some malformed inputs return empty description
@@ -171,7 +178,7 @@ public class ParserTest {
         // Only some malformed inputs throw exceptions
         assertThrows(ChungusException.class, () -> parser.parseEvent("event task /from 2025-01-01 /to"));
     }
-    
+
     @Test
     public void parseEvent_malformedInput_returnsEmptyOrPartialData() throws Exception {
         // Some malformed inputs return empty or partial data
@@ -179,7 +186,7 @@ public class ParserTest {
         assertEquals("", result1[0]);
         assertEquals("2025-01-01", result1[1]);
         assertEquals("2025-01-02", result1[2]);
-        
+
         String[] result2 = parser.parseEvent("event task /from /to 2025-01-02");
         assertEquals("task", result2[0]);
         assertEquals("", result2[1]);

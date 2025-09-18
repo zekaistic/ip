@@ -109,13 +109,13 @@ public class DeadlineTest {
         assertEquals("Test deadline", deadline.getDescription());
         assertEquals(" ", deadline.getStatusIcon());
         assertEquals(Priority.MEDIUM, deadline.getPriority());
-        
+
         deadline.markAsDone();
         assertEquals("X", deadline.getStatusIcon());
-        
+
         deadline.toggleStatus();
         assertEquals(" ", deadline.getStatusIcon());
-        
+
         deadline.setPriority(Priority.HIGH);
         assertEquals(Priority.HIGH, deadline.getPriority());
     }
@@ -124,16 +124,16 @@ public class DeadlineTest {
     public void dateParsing_variousFormats_worksCorrectly() {
         // Test different date formats
         String[] testDates = {
-            "2025-01-01",    // ISO format
-            "1/1/2025",      // Slash format
-            "1-1-2025",      // Dash format
-            "31/12/2025",    // Slash format with 2-digit day
-            "31-12-2025"     // Dash format with 2-digit day
+            "2025-01-01", // ISO format
+            "1/1/2025", // Slash format
+            "1-1-2025", // Dash format
+            "31/12/2025", // Slash format with 2-digit day
+            "31-12-2025" // Dash format with 2-digit day
         };
-        
+
         for (String date : testDates) {
             Deadline testDeadline = new Deadline("Test", date);
-            assertTrue(testDeadline.getByIso() != null, 
+            assertTrue(testDeadline.getByIso() != null,
                 "Date format should be parsed: " + date);
         }
     }
@@ -142,16 +142,16 @@ public class DeadlineTest {
     public void dateParsing_invalidFormats_returnsNull() {
         String[] invalidDates = {
             "not a date",
-            "2025/13/01",    // Invalid month
-            "2025/01/32",    // Invalid day
-            "25-12-31",      // Invalid year format
-            "2025-13-01",    // Invalid month
-            "2025-01-32"     // Invalid day
+            "2025/13/01", // Invalid month
+            "2025/01/32", // Invalid day
+            "25-12-31", // Invalid year format
+            "2025-13-01", // Invalid month
+            "2025-01-32" // Invalid day
         };
-        
+
         for (String date : invalidDates) {
             Deadline testDeadline = new Deadline("Test", date);
-            assertNull(testDeadline.getByIso(), 
+            assertNull(testDeadline.getByIso(),
                 "Invalid date should return null: " + date);
         }
     }
