@@ -24,6 +24,7 @@ public class Main extends Application {
             Scene scene = new Scene(ap);
             // Set window properties
             stage.setTitle("Chungus Task Manager");
+            stage.setMinWidth(300);
             stage.setMinHeight(400);
             stage.setResizable(true);
 
