@@ -22,6 +22,11 @@ public class Main extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
+            // Set window properties
+            stage.setTitle("Chungus Task Manager");
+            stage.setMinHeight(400);
+            stage.setResizable(true);
+
             stage.setScene(scene);
             fxmlLoader.<MainWindow>getController().setChungus(chungus); // inject the Chungus instance
             stage.show();

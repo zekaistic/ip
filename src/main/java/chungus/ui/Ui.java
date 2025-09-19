@@ -331,7 +331,7 @@ public class Ui {
         sb.append("  • event <description> /from <start> /to <end> - Add an event\n\n");
         sb.append("ℹ️ Other:\n");
         sb.append("  • help - Show this help message\n");
-        sb.append("  • bye - Exit the application\n\n");
+        sb.append("  • bye - Exit the application and save your tasks\n\n");
         sb.append("💡 Tips:\n");
         sb.append("  • Use task numbers from the list to reference specific tasks\n");
         sb.append("  • Dates should be in the following formats: yyyy-MM-dd, d/M/yyyy, d-M-yyyy\n");
