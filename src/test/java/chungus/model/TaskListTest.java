@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import chungus.common.ChungusException;
+
 public class TaskListTest {
     private TaskList taskList;
     private Task todo1;
@@ -17,7 +19,7 @@ public class TaskListTest {
     private Task deadline1;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws ChungusException {
         taskList = new TaskList();
         todo1 = new Todo("Read book");
         todo2 = new Todo("Write report");

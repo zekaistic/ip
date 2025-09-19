@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import chungus.common.ChungusException;
+import chungus.common.Constants;
+
 /**
  * Task that spans a start and end date/time.
  */
@@ -17,15 +20,23 @@ public class Event extends Task {
      * Creates an event.
      *
      * @param description description text
-     * @param from        start date (yyyy-MM-dd or d/M/yyyy) or free text
-     * @param to          end date (yyyy-MM-dd or d/M/yyyy) or free text
+     * @param from        start date (yyyy-MM-dd, d/M/yyyy, or d-M-yyyy)
+     * @param to          end date (yyyy-MM-dd, d/M/yyyy, or d-M-yyyy)
+     * @throws ChungusException if either date format is invalid
      */
-    public Event(String description, String from, String to) {
+    public Event(String description, String from, String to) throws ChungusException {
         super(description);
         this.fromRaw = from;
         this.toRaw = to;
         this.fromDate = tryParseDate(from);
         this.toDate = tryParseDate(to);
+
+        if (this.fromDate == null) {
+            throw new ChungusException(Constants.MSG_INVALID_START_DATE);
+        }
+        if (this.toDate == null) {
+            throw new ChungusException(Constants.MSG_INVALID_END_DATE);
+        }
     }
 
     private LocalDate tryParseDate(String input) {
@@ -49,10 +60,7 @@ public class Event extends Task {
     }
 
     private String formatForDisplay(String raw, LocalDate date) {
-        if (date != null) {
-            return date.format(DateTimeFormatter.ofPattern("MMM dd yyyy"));
-        }
-        return raw;
+        return date.format(DateTimeFormatter.ofPattern("MMM dd yyyy"));
     }
 
     public String getFrom() {
@@ -64,11 +72,11 @@ public class Event extends Task {
     }
 
     public String getFromIso() {
-        return this.fromDate != null ? this.fromDate.format(DateTimeFormatter.ISO_LOCAL_DATE) : this.fromRaw;
+        return this.fromDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
     public String getToIso() {
-        return this.toDate != null ? this.toDate.format(DateTimeFormatter.ISO_LOCAL_DATE) : this.toRaw;
+        return this.toDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
     @Override

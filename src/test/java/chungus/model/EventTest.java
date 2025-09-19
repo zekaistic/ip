@@ -1,16 +1,19 @@
 package chungus.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import chungus.common.ChungusException;
+
 public class EventTest {
     private Event event;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws ChungusException {
         event = new Event("Test event", "2025-01-01", "2025-01-02");
     }
 
@@ -22,31 +25,31 @@ public class EventTest {
     }
 
     @Test
-    public void constructor_withIsoDates_parsesCorrectly() {
+    public void constructor_withIsoDates_parsesCorrectly() throws ChungusException {
         Event isoEvent = new Event("ISO event", "2025-01-01", "2025-01-02");
         assertEquals("2025-01-01", isoEvent.getFromIso());
         assertEquals("2025-01-02", isoEvent.getToIso());
     }
 
     @Test
-    public void constructor_withSlashDates_parsesCorrectly() {
+    public void constructor_withSlashDates_parsesCorrectly() throws ChungusException {
         Event slashEvent = new Event("Slash event", "1/1/2025", "2/1/2025");
         assertEquals("2025-01-01", slashEvent.getFromIso());
         assertEquals("2025-01-02", slashEvent.getToIso());
     }
 
     @Test
-    public void constructor_withDashDates_parsesCorrectly() {
+    public void constructor_withDashDates_parsesCorrectly() throws ChungusException {
         Event dashEvent = new Event("Dash event", "1-1-2025", "2-1-2025");
         assertEquals("2025-01-01", dashEvent.getFromIso());
         assertEquals("2025-01-02", dashEvent.getToIso());
     }
 
     @Test
-    public void constructor_withInvalidDates_returnsRawInput() {
-        Event invalidEvent = new Event("Invalid event", "invalid from", "invalid to");
-        assertEquals("invalid from", invalidEvent.getFromIso());
-        assertEquals("invalid to", invalidEvent.getToIso());
+    public void constructor_withInvalidDates_throwsException() {
+        assertThrows(ChungusException.class, () -> {
+            new Event("Invalid event", "invalid from", "invalid to");
+        });
     }
 
     @Test
@@ -70,15 +73,17 @@ public class EventTest {
     }
 
     @Test
-    public void getFromIso_withInvalidDate_returnsRawInput() {
-        Event invalidEvent = new Event("Invalid", "not a date", "2025-01-01");
-        assertEquals("not a date", invalidEvent.getFromIso());
+    public void getFromIso_withInvalidDate_throwsException() {
+        assertThrows(ChungusException.class, () -> {
+            new Event("Invalid", "not a date", "2025-01-01");
+        });
     }
 
     @Test
-    public void getToIso_withInvalidDate_returnsRawInput() {
-        Event invalidEvent = new Event("Invalid", "2025-01-01", "not a date");
-        assertEquals("not a date", invalidEvent.getToIso());
+    public void getToIso_withInvalidDate_throwsException() {
+        assertThrows(ChungusException.class, () -> {
+            new Event("Invalid", "2025-01-01", "not a date");
+        });
     }
 
     @Test
@@ -95,10 +100,10 @@ public class EventTest {
     }
 
     @Test
-    public void toString_withInvalidDates_showsRawInput() {
-        Event invalidEvent = new Event("Invalid", "not a date", "also not a date");
-        String result = invalidEvent.toString();
-        assertTrue(result.contains("(from: not a date to: also not a date)"));
+    public void toString_withInvalidDates_throwsException() {
+        assertThrows(ChungusException.class, () -> {
+            new Event("Invalid", "not a date", "also not a date");
+        });
     }
 
     @Test
@@ -145,7 +150,7 @@ public class EventTest {
     }
 
     @Test
-    public void dateParsing_variousFormats_worksCorrectly() {
+    public void dateParsing_variousFormats_worksCorrectly() throws ChungusException {
         // Test different date formats
         String[][] testDatePairs = {
             {"2025-01-01", "2025-01-02"}, // ISO format
@@ -165,7 +170,7 @@ public class EventTest {
     }
 
     @Test
-    public void dateParsing_invalidFormats_returnsRawInput() {
+    public void dateParsing_invalidFormats_throwsException() {
         String[] invalidDates = {
             "not a date",
             "2025/13/01", // Invalid month
@@ -176,22 +181,22 @@ public class EventTest {
         };
 
         for (String date : invalidDates) {
-            Event testEvent = new Event("Test", date, "2025-01-01");
-            assertEquals(date, testEvent.getFromIso(),
-                "Invalid from date should return raw input: " + date);
+            assertThrows(ChungusException.class, () -> {
+                new Event("Test", date, "2025-01-01");
+            }, "Invalid from date should throw exception: " + date);
         }
     }
 
     @Test
     public void mixedDateFormats_handlesCorrectly() {
-        // One valid date, one invalid
-        Event mixedEvent = new Event("Mixed", "2025-01-01", "invalid date");
-        assertEquals("2025-01-01", mixedEvent.getFromIso());
-        assertEquals("invalid date", mixedEvent.getToIso());
+        // One valid date, one invalid - should throw exception
+        assertThrows(ChungusException.class, () -> {
+            new Event("Mixed", "2025-01-01", "invalid date");
+        });
 
-        // Both invalid
-        Event bothInvalidEvent = new Event("Both invalid", "not a date", "also not a date");
-        assertEquals("not a date", bothInvalidEvent.getFromIso());
-        assertEquals("also not a date", bothInvalidEvent.getToIso());
+        // Both invalid - should throw exception
+        assertThrows(ChungusException.class, () -> {
+            new Event("Both invalid", "not a date", "also not a date");
+        });
     }
 }

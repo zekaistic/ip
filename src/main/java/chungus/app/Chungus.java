@@ -143,6 +143,9 @@ public class Chungus {
                 "Please provide a task number and priority level.");
             setPriority(input);
             break;
+        case HELP:
+            ui.showHelp();
+            break;
         default:
             throw new ChungusException(Constants.MSG_UNKNOWN);
         }
@@ -317,6 +320,8 @@ public class Chungus {
             requireStartsWith(input, CommandType.PRIORITY.getCommand() + Constants.SPACE,
                 "Please provide a task number and priority level.");
             return setPriorityForGui(input);
+        case HELP:
+            return ui.getHelpMessage();
         default:
             throw new ChungusException(Constants.MSG_UNKNOWN);
         }

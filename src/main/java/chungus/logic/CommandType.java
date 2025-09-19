@@ -13,6 +13,7 @@ public enum CommandType {
     DEADLINE("deadline"),
     EVENT("event"),
     PRIORITY("priority"),
+    HELP("help"),
     BYE("bye");
 
     private final String command;

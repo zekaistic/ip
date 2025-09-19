@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import chungus.common.ChungusException;
+import chungus.common.Constants;
+
 /**
  * Task with a due date.
  */
@@ -14,11 +17,15 @@ public class Deadline extends Task {
      * Creates a deadline task.
      *
      * @param description description text
-     * @param rawDeadline date string in yyyy-MM-dd or d/M/yyyy
+     * @param rawDeadline date string in yyyy-MM-dd, d/M/yyyy, or d-M-yyyy
+     * @throws ChungusException if the date format is invalid
      */
-    public Deadline(String description, String rawDeadline) {
+    public Deadline(String description, String rawDeadline) throws ChungusException {
         super(description);
         this.dueDate = parseDate(rawDeadline);
+        if (this.dueDate == null) {
+            throw new ChungusException(Constants.MSG_INVALID_DATE_FORMAT);
+        }
     }
 
     private LocalDate parseDate(String input) {
@@ -50,13 +57,7 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
-        String formatted;
-        if (this.dueDate != null) {
-            formatted = this.dueDate.format(DateTimeFormatter.ofPattern("MMM dd yyyy"));
-        } else {
-            // If date parsing fails, use the raw input
-            formatted = "Invalid date format";
-        }
+        String formatted = this.dueDate.format(DateTimeFormatter.ofPattern("MMM dd yyyy"));
         return String.format("[%s] %s (by: %s)", TaskType.DEADLINE.getSymbol(), super.toString(), formatted);
     }
 }

@@ -1,17 +1,19 @@
 package chungus.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import chungus.common.ChungusException;
+
 public class DeadlineTest {
     private Deadline deadline;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws ChungusException {
         deadline = new Deadline("Test deadline", "2025-12-31");
     }
 
@@ -23,27 +25,28 @@ public class DeadlineTest {
     }
 
     @Test
-    public void constructor_withIsoDate_parsesCorrectly() {
+    public void constructor_withIsoDate_parsesCorrectly() throws ChungusException {
         Deadline isoDeadline = new Deadline("ISO deadline", "2025-12-31");
         assertEquals("2025-12-31", isoDeadline.getByIso());
     }
 
     @Test
-    public void constructor_withSlashDate_parsesCorrectly() {
+    public void constructor_withSlashDate_parsesCorrectly() throws ChungusException {
         Deadline slashDeadline = new Deadline("Slash deadline", "31/12/2025");
         assertEquals("2025-12-31", slashDeadline.getByIso());
     }
 
     @Test
-    public void constructor_withDashDate_parsesCorrectly() {
+    public void constructor_withDashDate_parsesCorrectly() throws ChungusException {
         Deadline dashDeadline = new Deadline("Dash deadline", "31-12-2025");
         assertEquals("2025-12-31", dashDeadline.getByIso());
     }
 
     @Test
-    public void constructor_withInvalidDate_returnsNullForIso() {
-        Deadline invalidDeadline = new Deadline("Invalid deadline", "invalid date");
-        assertNull(invalidDeadline.getByIso());
+    public void constructor_withInvalidDate_throwsException() {
+        assertThrows(ChungusException.class, () -> {
+            new Deadline("Invalid deadline", "invalid date");
+        });
     }
 
     @Test
@@ -52,9 +55,10 @@ public class DeadlineTest {
     }
 
     @Test
-    public void getByIso_withInvalidDate_returnsNull() {
-        Deadline invalidDeadline = new Deadline("Invalid", "not a date");
-        assertNull(invalidDeadline.getByIso());
+    public void getByIso_withInvalidDate_throwsException() {
+        assertThrows(ChungusException.class, () -> {
+            new Deadline("Invalid", "not a date");
+        });
     }
 
     @Test
@@ -71,10 +75,10 @@ public class DeadlineTest {
     }
 
     @Test
-    public void toString_withInvalidDate_showsInvalidDateMessage() {
-        Deadline invalidDeadline = new Deadline("Invalid", "not a date");
-        String result = invalidDeadline.toString();
-        assertTrue(result.contains("(by: Invalid date format)"));
+    public void toString_withInvalidDate_throwsException() {
+        assertThrows(ChungusException.class, () -> {
+            new Deadline("Invalid", "not a date");
+        });
     }
 
     @Test
@@ -121,7 +125,7 @@ public class DeadlineTest {
     }
 
     @Test
-    public void dateParsing_variousFormats_worksCorrectly() {
+    public void dateParsing_variousFormats_worksCorrectly() throws ChungusException {
         // Test different date formats
         String[] testDates = {
             "2025-01-01", // ISO format
@@ -139,7 +143,7 @@ public class DeadlineTest {
     }
 
     @Test
-    public void dateParsing_invalidFormats_returnsNull() {
+    public void dateParsing_invalidFormats_throwsException() {
         String[] invalidDates = {
             "not a date",
             "2025/13/01", // Invalid month
@@ -150,9 +154,9 @@ public class DeadlineTest {
         };
 
         for (String date : invalidDates) {
-            Deadline testDeadline = new Deadline("Test", date);
-            assertNull(testDeadline.getByIso(),
-                "Invalid date should return null: " + date);
+            assertThrows(ChungusException.class, () -> {
+                new Deadline("Test", date);
+            }, "Invalid date should throw exception: " + date);
         }
     }
 }

@@ -185,6 +185,15 @@ public class Ui {
         System.out.println("____________________________________________________________\n");
     }
 
+    /**
+     * Shows the help message with all available commands.
+     */
+    public void showHelp() {
+        System.out.println("____________________________________________________________\n");
+        System.out.println(getHelpMessage());
+        System.out.println("____________________________________________________________\n");
+    }
+
     // GUI-compatible methods that return formatted strings instead of printing to console
 
     /**
@@ -297,6 +306,36 @@ public class Ui {
         for (int i = 0; i < matches.size(); i++) {
             sb.append(String.format("%d. %s\n", i + 1, matches.get(i).toString()));
         }
+        return sb.toString();
+    }
+
+    /**
+     * Returns a comprehensive help message with all available commands for GUI display.
+     *
+     * @return Formatted help message
+     */
+    public String getHelpMessage() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Here are the commands I can help you with:\n\n");
+        sb.append("📋 View Tasks:\n");
+        sb.append("  • list - Show all your tasks\n");
+        sb.append("  • find <keyword> - Search for tasks containing a keyword\n\n");
+        sb.append("✅ Manage Tasks:\n");
+        sb.append("  • mark <number> - Mark a task as done\n");
+        sb.append("  • unmark <number> - Mark a task as not done\n");
+        sb.append("  • delete <number> - Remove a task from the list\n");
+        sb.append("  • priority <number> <level> - Set priority (high/medium/low)\n\n");
+        sb.append("➕ Add Tasks:\n");
+        sb.append("  • todo <description> - Add a simple todo task\n");
+        sb.append("  • deadline <description> /by <date> - Add a task with deadline\n");
+        sb.append("  • event <description> /from <start> /to <end> - Add an event\n\n");
+        sb.append("ℹ️ Other:\n");
+        sb.append("  • help - Show this help message\n");
+        sb.append("  • bye - Exit the application\n\n");
+        sb.append("💡 Tips:\n");
+        sb.append("  • Use task numbers from the list to reference specific tasks\n");
+        sb.append("  • Dates should be in the following formats: yyyy-MM-dd, d/M/yyyy, d-M-yyyy\n");
+        sb.append("  • Priority levels: high, medium, low (default is medium)");
         return sb.toString();
     }
 }

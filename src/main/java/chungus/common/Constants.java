@@ -24,6 +24,12 @@ public final class Constants {
     public static final String MSG_EVENT_DESC_EMPTY = "The description of an event cannot be empty.";
     public static final String MSG_EVENT_START_EMPTY = "The start time cannot be empty.";
     public static final String MSG_EVENT_END_EMPTY = "The end time cannot be empty.";
+    public static final String MSG_INVALID_DATE_FORMAT = "Invalid date format. Please use yyyy-MM-dd, "
+            + "d/M/yyyy, or d-M-yyyy format.";
+    public static final String MSG_INVALID_START_DATE = "Invalid start date format. Please use yyyy-MM-dd, "
+            + "d/M/yyyy, or d-M-yyyy format.";
+    public static final String MSG_INVALID_END_DATE = "Invalid end date format. Please use yyyy-MM-dd, "
+            + "d/M/yyyy, or d-M-yyyy format.";
 
     private Constants() {}
 

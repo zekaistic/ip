@@ -38,7 +38,8 @@ public class MainWindow extends AnchorPane {
     public void setChungus(Chungus c) {
         chungus = c;
         // Show welcome message when Chungus is initialized
-        String welcomeMessage = "Hello! I'm Chungus!\nWhat can I do for you?";
+        String welcomeMessage = "Hello! I'm Chungus!\nWhat can I do for you?\n\n"
+                + "💡 Type 'help' to see all available commands!";
         dialogContainer.getChildren().addAll(
                 DialogBox.getChungusDialog(welcomeMessage, chungusImage));
     }
